@@ -5,27 +5,48 @@
 #
 # Setup :
 #  cp rla_tracker /usr/share/munin/plugins/                                  
-#  chmod +x /usr/share/munin/plugins/rla_tracker
 #  ln -s /usr/share/munin/plugins/rla_tracker /etc/munin/plugins/rla_tracker
 #
 #  Put the following lines in /etc/munin/plugin-conf.d/munin-node
+#
 #    [rla_tracker]
-#    env.log_file '/path/to/file
-#    env.lines 50000
-#    env.interval 300
-#    user www-data
-#    timeout 15
+#    env.log_file '/path/to/file'
+#    env.lines 50000        # Optional
+#    env.interval 300       # Optional
+#    user root
 #    command /usr/local/bin/ruby %c
 #
 #  /etc/init.d/munin-node restart
 #
+#
+#%# family=auto
+#%# capabilities=autoconf
+
+def autoconf
+  begin
+    require 'rubygems'
+    gem "request-log-analyzer", ">=1.1.6"
+  rescue Exception => e
+    puts "no (Gem not found: #{e})"
+    exit 1
+  end
+
+  unless `echo "test" | tail 2>/dev/null`.include?("test")
+    puts "no (tail command not found)"
+    exit 1
+  end
+  
+  puts "yes"
+  exit 0
+end
+
 def output_config
-  interval = ENV['interval'].to_i || 300
+  interval = ENV['interval'] || 300
 
   puts <<-END
 graph_category App
 graph_title railsdoctors.com
-graph_vlabel requests / #{interval / 60} seconds
+graph_vlabel requests / #{interval.to_i / 60} minutes
  
 get.label get
 get.draw AREA
@@ -39,18 +60,20 @@ END
   exit 0
 end
  
-def output_values(file = "")
+def output_values(file, debug = false)
   if file == "" || file.nil?
-    $stderr.puts "failed executing request-log-analyzer. Is the file path correct?"
+    $stderr.puts "Filepath unspecified. Exiting"
     exit 1  
   end
   
-  interval = ENV['interval'].to_i || 300
-  
-  after_time = (Time.now - interval).strftime('%Y%m%d%H%M%S')
+  interval        = ENV['interval'] || 300
+  after_time      = (Time.now - interval).strftime('%Y%m%d%H%M%S')
   number_of_lines = ENV['lines'] || 50000
+
+  puts "Processing the last #{number_of_lines} lines of #{file} which are less then #{interval} seconds old." if debug  
   
-  status = `tail -n #{number_of_lines} #{file} | /usr/local/bin/request-log-analyzer - --after #{after_time} -b 2>/dev/null`
+  status = `tail -n #{number_of_lines} #{file} | /usr/bin/request-log-analyzer - --after #{after_time} -b 2>/dev/null`
+
   unless $?.success?
     $stderr.puts "failed executing request-log-analyzer. Is the gem path correct?"
     exit 1
@@ -71,6 +94,10 @@ end
  
 if ARGV[0] == "config"
   output_config
+elsif ARGV[0] == "autoconf"
+  autoconf
+elsif ARGV[0] == "debug"
+  output_values(ENV['log_file'] || ARGV[1], true)
 else
   output_values(ENV['log_file'] || ARGV[0])
 end

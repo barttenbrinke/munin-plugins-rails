@@ -2,11 +2,10 @@
 #
 # Passenger status plugin
 # 2009 - Bart ten Brinke - Railsdoctors.com
-# Original by: http://www.dcmanges.com/blog/rails-application-visualization-with-munin
+# Original: http://www.dcmanges.com/blog/rails-application-visualization-with-munin
 #
 # Setup :
 #  cp passenger_status /usr/share/munin/plugins/                                  
-#  chmod +x /usr/share/munin/plugins/passenger_status
 #  ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
 #
 #  Put the following lines in /etc/munin/plugin-conf.d/munin-node
@@ -16,6 +15,23 @@
 #
 #  /etc/init.d/munin-node restart
 #
+#
+#%# family=auto
+#%# capabilities=autoconf
+
+def autoconf
+  begin
+    require 'rubygems'
+    gem "passenger", ">=2.0"
+  rescue Exception => e
+    puts "no (Gem not found: #{e})"
+    exit 1
+  end
+  
+  puts "yes"
+  exit 0
+end
+
 def output_config
   puts <<-END
 graph_category App
@@ -30,12 +46,16 @@ END
   exit 0
 end
  
-def output_values
+def output_values(debug = false)
   status = `/usr/bin/passenger-status`
+  
   unless $?.success?
     $stderr.puts "failed executing passenger-status"
     exit 1
   end
+
+  puts status if debug
+
   status =~ /max\s+=\s+(\d+)/
   puts "max.value #{$1}"
  
@@ -52,6 +72,10 @@ end
  
 if ARGV[0] == "config"
   output_config
+elsif ARGV[0] == "autoconf"
+  autoconf
+elsif ARGV[0] == "debug"
+  output_values(true)
 else
   output_values
 end
