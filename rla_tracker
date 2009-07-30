@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+#
+# Request-log-analyzer Munin plugin
+# 2009 - Bart ten Brinke - Railsdoctors.com
+#
+# Setup :
+#  cp rla_tracker /usr/share/munin/plugins/                                  
+#  chmod +x /usr/share/munin/plugins/rla_tracker
+#  ln -s /usr/share/munin/plugins/rla_tracker /etc/munin/plugins/rla_tracker
+#
+#  Put the following lines in /etc/munin/plugin-conf.d/munin-node
+#    [rla_tracker]
+#    env.log_file '/path/to/file
+#    env.lines 50000
+#    env.interval 300
+#    user www-data
+#    timeout 15
+#    command /usr/local/bin/ruby %c
+#
+#  /etc/init.d/munin-node restart
+#
+def output_config
+  interval = ENV['interval'].to_i || 300
+
+  puts <<-END
+graph_category App
+graph_title railsdoctors.com
+graph_vlabel requests / #{interval / 60} seconds
+ 
+get.label get
+get.draw AREA
+post.label post
+post.draw STACK
+put.label put
+put.draw STACK
+delete.label delete
+delete.draw STACK
+END
+  exit 0
+end
+ 
+def output_values(file = "")
+  if file == "" || file.nil?
+    $stderr.puts "failed executing request-log-analyzer. Is the file path correct?"
+    exit 1  
+  end
+  
+  interval = ENV['interval'].to_i || 300
+  
+  after_time = (Time.now - interval).strftime('%Y%m%d%H%M%S')
+  number_of_lines = ENV['lines'] || 50000
+  
+  status = `tail -n #{number_of_lines} #{file} | /usr/local/bin/request-log-analyzer - --after #{after_time} -b 2>/dev/null`
+  unless $?.success?
+    $stderr.puts "failed executing request-log-analyzer. Is the gem path correct?"
+    exit 1
+  end
+    
+  status =~ /^GET\s+\|\s+(\d+).*$/
+  puts "get.value #{$1 || 0}"
+
+  status =~ /^POST\s+\|\s+(\d+).*$/
+  puts "post.value #{$1 || 0}"
+
+  status =~ /^PUT\s+\|\s+(\d+).*$/
+  puts "put.value #{$1 || 0}"
+
+  status =~ /^DELETE\s+\|\s+(\d+).*$/
+  puts "delete.value #{$1 || 0}"
+end
+ 
+if ARGV[0] == "config"
+  output_config
+else
+  output_values(ENV['log_file'] || ARGV[0])
+end

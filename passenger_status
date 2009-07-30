@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+#
+# Passenger status plugin
+# 2009 - Bart ten Brinke - Railsdoctors.com
+# Original by: http://www.dcmanges.com/blog/rails-application-visualization-with-munin
+#
+# Setup :
+#  cp passenger_status /usr/share/munin/plugins/                                  
+#  chmod +x /usr/share/munin/plugins/passenger_status
+#  ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
+#
+#  Put the following lines in /etc/munin/plugin-conf.d/munin-node
+#   [passenger_*]
+#   user root
+#   command /usr/local/bin/ruby %c
+#
+#  /etc/init.d/munin-node restart
+#
+def output_config
+  puts <<-END
+graph_category App
+graph_title passenger status
+graph_vlabel count
+ 
+sessions.label sessions
+max.label max processes
+running.label running processes
+active.label active processes
+END
+  exit 0
+end
+ 
+def output_values
+  status = `/usr/bin/passenger-status`
+  unless $?.success?
+    $stderr.puts "failed executing passenger-status"
+    exit 1
+  end
+  status =~ /max\s+=\s+(\d+)/
+  puts "max.value #{$1}"
+ 
+  status =~ /count\s+=\s+(\d+)/
+  puts "running.value #{$1}"
+ 
+  status =~ /active\s+=\s+(\d+)/
+  puts "active.value #{$1}"
+ 
+  total_sessions = 0
+  status.scan(/Sessions: (\d+)/).flatten.each { |count| total_sessions += count.to_i }
+  puts "sessions.value #{total_sessions}"
+end
+ 
+if ARGV[0] == "config"
+  output_config
+else
+  output_values
+end
