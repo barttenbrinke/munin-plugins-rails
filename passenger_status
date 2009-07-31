@@ -1,24 +1,51 @@
 #!/usr/bin/env ruby
-#
-# Passenger status plugin
-# 2009 - Bart ten Brinke - Railsdoctors.com
-# Original: http://www.dcmanges.com/blog/rails-application-visualization-with-munin
-#
-# Setup :
-#  cp passenger_status /usr/share/munin/plugins/                                  
-#  ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
-#
-#  Put the following lines in /etc/munin/plugin-conf.d/munin-node
-#   [passenger_*]
-#   user root
-#   command /usr/local/bin/ruby %c
-#
-#  /etc/init.d/munin-node restart
-#
-#
-#%# family=auto
-#%# capabilities=autoconf
+pod=<<-POD
 
+=head1 NAME
+passenger_status - Munin plugin to monitor passenger application servers.
+
+=head1 APPLICABLE SYSTEMS
+All systems that have passenger installed.
+
+=head1 CONFIGURATION
+The plugin needs to execute passenger-status.
+This configuration section shows the defaults of the plugin:
+
+  [passenger_*]
+  user root
+  command /usr/local/bin/ruby %c
+  
+Options
+  env.passenger_status = '/path/to/passenger-status'
+
+ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
+
+=head1 INTERPRETATION
+The plugin shows the maximum, active and current number of running passenger instances.
+
+=head1 MAGIC MARKERS
+  #%# family=auto
+  #%# capabilities=autoconf
+
+=head1 VERSION
+1.0
+
+=head1 BUGS
+None known
+
+=head1 AUTHOR
+Bart ten Brinke - railsdoctors.com
+(based on Daniel Manges - http://gist.github.com/20319)
+
+=head1 LICENSE
+MIT
+
+POD
+
+# Globals
+PASSENGER_STATUS = ENV['passenger_status'] || '/usr/local/bin/passenger-status'
+
+# Check if this plugin can run
 def autoconf
   begin
     require 'rubygems'
@@ -28,26 +55,43 @@ def autoconf
     exit 1
   end
   
+  status = `#{PASSENGER_STATUS}`
+  unless $?.success?
+    puts "no (error whene excuting #{PASSENGER_STATUS})"
+    exit 1
+  end
+  
   puts "yes"
   exit 0
 end
 
-def output_config
-  puts <<-END
+# Describe the graph config
+def config
+  status = `#{PASSENGER_STATUS}`
+  
+  status =~ /max\s+=\s+(\d+)/
+  upper_limit = $1 || 150
+
+  puts <<-CONFIG
 graph_category App
-graph_title passenger status
+graph_title Passenger status
 graph_vlabel count
+graph_args --base 1000 -l 0 --upperlimit #{upper_limit}
+graph_info The amount of active passengers on this application server.
  
 sessions.label sessions
 max.label max processes
 running.label running processes
 active.label active processes
-END
+CONFIG
   exit 0
 end
  
-def output_values(debug = false)
-  status = `/usr/bin/passenger-status`
+
+# Collect the data
+# <tt>debug</tt> Show debug information
+def run(debug = false)
+  status = `#{PASSENGER_STATUS}`
   
   unless $?.success?
     $stderr.puts "failed executing passenger-status"
@@ -70,12 +114,14 @@ def output_values(debug = false)
   puts "sessions.value #{total_sessions}"
 end
  
+
+# Main
 if ARGV[0] == "config"
-  output_config
+  config
 elsif ARGV[0] == "autoconf"
   autoconf
 elsif ARGV[0] == "debug"
-  output_values(true)
+  run(true)
 else
-  output_values
+  run
 end

@@ -8,7 +8,7 @@ Must things in this repository will rely heavily on the request-log-analyzer gem
 
 == Installation
 
-Not yet available.
+See plugins for more information.
 
 == Additional information
 
