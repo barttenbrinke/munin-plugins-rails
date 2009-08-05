@@ -2,7 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-rails_view_render_time - Munin plugin to monitor the minimum, average and maximum view render times.
+rails_request_error - Munin plugin to monitor the amount of errors.
 
 =head1 APPLICABLE SYSTEMS
 All systems that have a rails application log.
@@ -12,7 +12,7 @@ The request-log-analyzer gem has to be intalled.
 Also the script has to be able to access the rails log file and tail.
 This configuration section shows the defaults of the plugin:
 
-  [rails_view_render_time]
+  [rails_request_error]
   env.log_file '/path/to/production.log'
   user www-data
   command /usr/local/bin/ruby %c
@@ -21,10 +21,10 @@ Options
   env.lines 50000        # Number of lines to tail
   env.interval 300       # Munin interval in seconds (used for graphs and caching)
 
-ln -s /usr/share/munin/plugins/rails_view_render_time /etc/munin/plugins/rails_view_render_time
+ln -s /usr/share/munin/plugins/rails_request_error /etc/munin/plugins/rails_request_error
 
 =head1 INTERPRETATION
-Three lines are graphed, showing the minimum, average and maximum view render times.
+One line is graphed, showing the amount of errors.
 
 =head1 MAGIC MARKERS
   #%# family=auto
@@ -78,13 +78,11 @@ end
 def config
   puts <<-CONFIG
 graph_category App
-graph_title View render times
-graph_vlabel request time in ms
-graph_info The minimum, maximum and average view render times - railsdoctors.com
+graph_title Request errors
+graph_vlabel Amount
+graph_info The amount of request errors - railsdoctors.com
  
-min.label min
-max.label max
-average.label avg
+error.label error
 CONFIG
   exit 0
 end
@@ -105,7 +103,8 @@ def fetch_or_create_yaml_file(log_file, debug = false)
   # Create temp file rla if needed
   unless File.exists?(temp_file)
     puts "Processing the last #{NUMBER_OF_LINES} lines of #{log_file} which are less then #{INTERVAL} seconds old." if debug    
-    status = `tail -n #{NUMBER_OF_LINES} #{log_file} | /usr/bin/request-log-analyzer - --after #{AFTER_TIME} -b --dump #{temp_file} 2>/dev/null`
+    # status = `tail -n #{NUMBER_OF_LINES} #{log_file} | /usr/bin/request-log-analyzer - --after #{AFTER_TIME} -b --dump #{temp_file} 2>/dev/null`
+    status = `tail -n #{NUMBER_OF_LINES} #{log_file} | /usr/bin/request-log-analyzer - -b --dump #{temp_file} 2>/dev/null`
 
     unless $?.success?
       $stderr.puts "failed executing request-log-analyzer. Is the gem path correct?"
@@ -127,29 +126,19 @@ def run(log_file, debug = false)
   end
 
   # Initialize values
-  max_value = 0
-  min_value = 1.0/0.0
-  cumulative = 0
-  hits = 0
+  error_value = 0
   
   # Walk through the
   require "yaml"
   rla = YAML::load_file( fetch_or_create_yaml_file(log_file, debug) )
 
-  if rla && rla["View rendering time"]  
-    rla["View rendering time"].each do |item|
-      max_value = item[1][:max] if item[1][:max] > max_value
-      min_value = item[1][:min] if item[1][:min] < min_value
-      hits += item[1][:hits]
-      cumulative += item[1][:cumulative]
+  if rla && rla["Failed requests"]  
+    rla["Failed requests"].each do |item|
+      error_value += item[1]
     end
-  else
-    hits = 1
   end
   
-  puts "max.value #{max_value}"
-  puts "min.value #{min_value}"
-  puts "average.value #{cumulative / hits}"
+  puts "error.value #{error_value}"
 end
 
 # Main

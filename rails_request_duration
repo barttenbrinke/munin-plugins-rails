@@ -82,9 +82,9 @@ graph_title Request time
 graph_vlabel Time in ms
 graph_info The minimum, maximum and average request times - railsdoctors.com
  
-min.label get
-max.label post
-average.label put
+min.label min
+max.label max
+average.label avg
 CONFIG
   exit 0
 end

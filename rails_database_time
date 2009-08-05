@@ -82,9 +82,9 @@ graph_title Database time
 graph_vlabel Database time in ms
 graph_info The minimum, maximum and average database times - railsdoctors.com
  
-min.label get
-max.label post
-average.label put
+min.label min
+max.label max
+average.label avg
 CONFIG
   exit 0
 end
