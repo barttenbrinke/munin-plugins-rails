@@ -77,7 +77,7 @@ graph_category App
 graph_title Passenger status
 graph_vlabel count
 graph_args --base 1000 -l 0 --upperlimit #{upper_limit}
-graph_info The amount of active passengers on this application server.
+graph_info The amount of active passengers on this application server - railsdoctors.com
  
 sessions.label sessions
 max.label max processes

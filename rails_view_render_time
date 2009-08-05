@@ -2,8 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-rails_requests - Munin plugin to monitor the amount of get, put, post and delete requests from a
-rails application log.
+rails_view_render_time - Munin plugin to monitor the minimum, average and maximum view render times.
 
 =head1 APPLICABLE SYSTEMS
 All systems that have a rails application log.
@@ -13,7 +12,7 @@ The request-log-analyzer gem has to be intalled.
 Also the script has to be able to access the rails log file and tail.
 This configuration section shows the defaults of the plugin:
 
-  [rails_requests]
+  [rails_view_render_time]
   env.log_file '/path/to/production.log'
   user www-data
   command /usr/local/bin/ruby %c
@@ -22,7 +21,7 @@ Options
   env.lines 50000        # Number of lines to tail
   env.interval 300       # Munin interval in seconds (used for graphs and caching)
 
-ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
+ln -s /usr/share/munin/plugins/rails_view_render_time /etc/munin/plugins/rails_view_render_time
 
 =head1 INTERPRETATION
 All HTTP methods are stacked so that the total equals the amount of requests processed per 5 minutes.
@@ -60,6 +59,7 @@ def autoconf
   begin
     require 'rubygems'
     gem "request-log-analyzer", ">=1.1.6"
+    require "yaml"
   rescue Exception => e
     puts "no (Gem not found: #{e})"
     exit 1
@@ -78,23 +78,17 @@ end
 def config
   puts <<-CONFIG
 graph_category App
-graph_title Processed requests
-graph_vlabel requests / #{INTERVAL / 60} minutes
-graph_info The amount of requests processed by this application server - railsdoctors.com
+graph_title View render times
+graph_vlabel request time in ms
+graph_info The minimum, maximum and average view render times - railsdoctors.com
  
-get.label get
-get.draw AREA
-post.label post
-post.draw STACK
-put.label put
-put.draw STACK
-delete.label delete
-delete.draw STACK
+min.label get
+max.label post
+average.label put
 CONFIG
   exit 0
 end
 
-# Fetch or create yaml cache file using request-log-analyzer
 def fetch_or_create_yaml_file(log_file, debug = false)
   # Clean up any old temp files left in de temp folder
   Dir.new(TEMP_FOLDER).entries.each do |file_name|
@@ -133,28 +127,29 @@ def run(log_file, debug = false)
   end
 
   # Initialize values
-  get_value     = 0
-  post_value    = 0
-  put_value     = 0
-  delete_value  = 0
+  max_value = 0
+  min_value = 1.0/0.0
+  cumulative = 0
+  hits = 0
   
-  # Walk through the 
-  File.open(fetch_or_create_yaml_file(log_file, debug)).each_line{ |line|
-    if match = line.match(/^\s+GET\:\s(\d+).*/)
-      get_value = match[1]
-    elsif match = line.match(/^\s+POST\:\s(\d+).*/)
-      post_value = match[1]
-    elsif match = line.match(/^\s+PUT\:\s(\d+).*/)
-      put_value = match[1]
-    elsif match = line.match(/^\s+DELETE\:\s(\d+).*/)
-      delete_value = match[1]
+  # Walk through the
+  require "yaml"
+  rla = YAML::load_file( fetch_or_create_yaml_file(log_file, debug) )
+
+  if rla && rla["View rendering time"]  
+    rla["View rendering time"].each do |item|
+      max_value = item[1][:max] if item[1][:max] > max_value
+      min_value = item[1][:min] if item[1][:min] < min_value
+      hits += item[1][:hits]
+      cumulative += item[1][:cumulative]
     end
-  }
+  else
+    hits = 1
+  end
   
-  puts "get.value #{get_value}"
-  puts "post.value #{post_value}"
-  puts "put.value #{put_value}"
-  puts "delete.value #{delete_value}"
+  puts "max.value #{max_value}"
+  puts "min.value #{min_value}"
+  puts "average.value #{cumulative / hits}"
 end
 
 # Main
