@@ -24,7 +24,7 @@ Options
 ln -s /usr/share/munin/plugins/rails_request_duration /etc/munin/plugins/rails_request_duration
 
 =head1 INTERPRETATION
-All HTTP methods are stacked so that the total equals the amount of requests processed per 5 minutes.
+Three lines are graphed, showing the minimum, average and maximum request times.
 
 =head1 MAGIC MARKERS
   #%# family=auto
