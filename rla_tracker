@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 pod=<<-POD
 
 =head1 NAME
@@ -49,6 +50,10 @@ INTERVAL        = ENV['interval'] ? ENV['interval'].to_i : 300
 NUMBER_OF_LINES = ENV['lines'] || 50000
 LOG_FILE        = ENV['log_file']
 AFTER_TIME      = (Time.now - INTERVAL).strftime('%Y%m%d%H%M%S')
+FLOOR_TIME      = Time.at((Time.now.to_f / INTERVAL).floor * INTERVAL)
+
+TEMP_FOLDER     = '/tmp'
+TEMP_FILE       = "rla_#{FLOOR_TIME.to_i}.yml"
 
 # Check if we can run this plugin on this system
 def autoconf
@@ -89,33 +94,65 @@ CONFIG
   exit 0
 end
 
+# Clean up any old temp files left in de temp folder
+def clean_up_temp_files(debug = false)
+  Dir.new(TEMP_FOLDER).entries.each do |file_name|
+    if match = file_name.match(/^rla_.*\.yml/)
+      if match[0] != TEMP_FILE
+        puts "Removing old cache file: #{file_name}" if debug
+        File.delete(TEMP_FOLDER + "/" + file_name) 
+      end
+    end
+  end
+end
+
 # Gather information
 def run(file, debug = false)
+  clean_up_temp_files(debug)
+
   if file == "" || file.nil?
     $stderr.puts "Filepath unspecified. Exiting"
     exit 1  
   end
-  
-  puts "Processing the last #{NUMBER_OF_LINES} lines of #{file} which are less then #{INTERVAL} seconds old." if debug  
-  
-  status = `tail -n #{NUMBER_OF_LINES} #{file} | /usr/bin/request-log-analyzer - --after #{AFTER_TIME} -b 2>/dev/null`
 
-  unless $?.success?
-    $stderr.puts "failed executing request-log-analyzer. Is the gem path correct?"
-    exit 1
+  temp_file = TEMP_FOLDER + "/" + TEMP_FILE
+  
+  # Run rla if needed
+  unless File.exists?(temp_file)
+    puts "Processing the last #{NUMBER_OF_LINES} lines of #{file} which are less then #{INTERVAL} seconds old." if debug    
+    status = `tail -n #{NUMBER_OF_LINES} #{file} | /usr/bin/request-log-analyzer - --after #{AFTER_TIME} -b --dump #{temp_file} 2>/dev/null`
+
+    unless $?.success?
+      $stderr.puts "failed executing request-log-analyzer. Is the gem path correct?"
+      exit 1
+    end
+  else
+    puts "Processing cached YAML result #{temp_file}" if debug      
   end
-    
-  status =~ /^GET\s+\|\s+(\d+).*$/
-  puts "get.value #{$1 || 0}"
-
-  status =~ /^POST\s+\|\s+(\d+).*$/
-  puts "post.value #{$1 || 0}"
-
-  status =~ /^PUT\s+\|\s+(\d+).*$/
-  puts "put.value #{$1 || 0}"
-
-  status =~ /^DELETE\s+\|\s+(\d+).*$/
-  puts "delete.value #{$1 || 0}"
+  
+  # Initialize values
+  get_value     = 0
+  post_value    = 0
+  put_value     = 0
+  delete_value  = 0
+  
+  # Walk through the 
+  File.open(temp_file).each_line{ |line|
+    if match = line.match(/^\s+GET\:\s(\d+).*/)
+      get_value = match[1]
+    elsif match = line.match(/^\s+POST\:\s(\d+).*/)
+      post_value = match[1]
+    elsif match = line.match(/^\s+PUT\:\s(\d+).*/)
+      put_value = match[1]
+    elsif match = line.match(/^\s+DELETE\:\s(\d+).*/)
+      delete_value = match[1]
+    end
+  }
+  
+  puts "get.value #{get_value}"
+  puts "post.value #{post_value}"
+  puts "put.value #{put_value}"
+  puts "delete.value #{delete_value}"
 end
 
 # Main
