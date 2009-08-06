@@ -79,7 +79,8 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title View render times
-graph_vlabel request time in s
+graph_vlabel request time in ms
+graph_args --base 1000 -l 0
 graph_info The minimum, maximum and average view render times - railsdoctors.com
  
 min.label min
@@ -147,9 +148,9 @@ def run(log_file, debug = false)
     hits = 1
   end
   
-  puts "max.value #{max_value}"
-  puts "min.value #{min_value}"
-  puts "average.value #{cumulative / hits}"
+  puts "max.value #{(max_value*1000).to_i}"
+  puts "min.value #{(min_value*1000).to_i}"
+  puts "average.value #{((cumulative / hits)*1000).to_i}"
 end
 
 # Main
