@@ -152,7 +152,7 @@ end
 
 # Main
 if ARGV[0] == "config"
-  output_config
+  config
 elsif ARGV[0] == "autoconf"
   autoconf
 elsif ARGV[0] == "debug"
