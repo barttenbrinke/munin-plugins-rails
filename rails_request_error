@@ -2,7 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-rails_request_error - Munin plugin to monitor the amount of errors.
+rails_request_error - Munin plugin to monitor the amount of errors and processb lockers.
 
 =head1 APPLICABLE SYSTEMS
 All systems that have a rails application log.
@@ -24,7 +24,8 @@ Options
 ln -s /usr/share/munin/plugins/rails_request_error /etc/munin/plugins/rails_request_error
 
 =head1 INTERPRETATION
-One line is graphed, showing the amount of errors.
+Two lines are graphed, one showing the amount of errors raised and one showing the amount of process
+blockers. Process blockers are requests that took longer than 1 second to complete.
 
 =head1 MAGIC MARKERS
   #%# family=auto
@@ -83,6 +84,7 @@ graph_vlabel Amount
 graph_info The amount of request errors - railsdoctors.com
  
 error.label error
+blocker.label blocker
 CONFIG
   exit 0
 end
@@ -127,6 +129,7 @@ def run(log_file, debug = false)
 
   # Initialize values
   error_value = 0
+  blocker_value = 0
   
   # Walk through the
   require "yaml"
@@ -138,7 +141,14 @@ def run(log_file, debug = false)
     end
   end
   
+  if rla && rla["Process blockers (> 1 sec duration)"]
+    rla["Process blockers (> 1 sec duration)"].each do |item|
+      blocker_value += item[1]
+    end
+  end
+  
   puts "error.value #{error_value}"
+  puts "blocker.value #{blocker_value}"
 end
 
 # Main
