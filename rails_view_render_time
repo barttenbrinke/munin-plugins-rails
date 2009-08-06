@@ -79,7 +79,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title View render times
-graph_vlabel request time in ms
+graph_vlabel request time in s
 graph_info The minimum, maximum and average view render times - railsdoctors.com
  
 min.label min

@@ -79,7 +79,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title Database time
-graph_vlabel Database time in ms
+graph_vlabel Database time in s
 graph_info The minimum, maximum and average database times - railsdoctors.com
  
 min.label min

@@ -79,7 +79,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title Request time
-graph_vlabel Time in ms
+graph_vlabel Time in s
 graph_info The minimum, maximum and average request times - railsdoctors.com
  
 min.label min
