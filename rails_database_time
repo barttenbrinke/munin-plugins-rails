@@ -148,7 +148,7 @@ def run(log_file, debug = false)
     hits = 1
   end
   
-  # Switch to ms
+  # Report in rounded ms
   puts "max.value #{(max_value * 1000).to_i}"
   puts "min.value #{(min_value * 1000).to_i}"
   puts "average.value #{((cumulative / hits) * 1000).to_i}"
