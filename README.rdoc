@@ -4,15 +4,15 @@ Collection of munin plugins for rails server environments.
 This will make monitoring your rails app a piece of cake.
 
 Goal of this project is to create munin plugins that not only work in munin, but are also consise (see references).
-Must things in this repository will rely heavily on the request-log-analyzer gem.
+Most things in this repository will rely heavily on the request-log-analyzer gem.
 
 == Installation
 
 See plugins for more information.
 
 == Additional information
-
 * Railsdoctors homepage: http://railsdoctors.com
+
 * http://munin.projects.linpro.no/wiki/HowToWritePlugins
 * http://munin.projects.linpro.no/wiki/ConcisePlugins
 
