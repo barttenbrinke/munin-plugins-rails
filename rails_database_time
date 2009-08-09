@@ -146,6 +146,7 @@ def run(log_file, debug = false)
     end
   else
     hits = 1
+    min_value = 0
   end
   
   # Report in rounded ms
