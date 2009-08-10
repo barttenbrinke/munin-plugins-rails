@@ -16,7 +16,7 @@ This configuration section shows the defaults of the plugin:
   command /usr/local/bin/ruby %c
   
 Options
-  env.passenger_status = '/path/to/passenger-status'
+  env.passenger_status '/path/to/passenger-status'
 
 ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
 
