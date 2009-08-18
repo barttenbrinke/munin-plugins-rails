@@ -47,5 +47,5 @@ Happy monitoring!
 * Railsdoctors:         http://railsdoctors.com
 * Request-log-analzer:  http://github.com/wvanbergen/request-log-analyzer/
 * Munin:                http://munin.projects.linpro.no/wiki/ConcisePlugins
-* License:              Ruby
+* License:              MIT
 
