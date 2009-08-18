@@ -2,7 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-rails_request_error - Munin plugin to monitor the amount of errors and processb lockers.
+rails_request_error - Munin plugin to monitor the amount of errors and process blockers.
 
 =head1 APPLICABLE SYSTEMS
 All systems that have a rails application log.
@@ -32,7 +32,7 @@ blockers. Process blockers are requests that took longer than 1 second to comple
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.0
+1.1
 
 =head1 BUGS
 None known

@@ -2,7 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-rails_request_duration - Munin plugin to monitor the minimum, average and maximum request times.
+rails_request_duration - Munin plugin to monitor the minimum, average and maximum request duration.
 
 =head1 APPLICABLE SYSTEMS
 All systems that have a rails application log.
@@ -31,7 +31,7 @@ Three lines are graphed, showing the minimum, average and maximum request times.
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.0
+1.1
 
 =head1 BUGS
 None known

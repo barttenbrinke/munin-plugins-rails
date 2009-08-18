@@ -31,7 +31,7 @@ Three lines are graphed, showing the minimum, average and maximum database times
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.0
+1.1
 
 =head1 BUGS
 None known

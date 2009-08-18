@@ -1,18 +1,53 @@
 = Munin-Rails-Plugins
 
-Collection of munin plugins for rails server environments.
+Collection of Consise Munin plugins for Rails server environments.
 This will make monitoring your rails app a piece of cake.
 
-Goal of this project is to create munin plugins that not only work in munin, but are also consise (see references).
-Most things in this repository will rely heavily on the request-log-analyzer gem.
+This project containse munin plugins that not only work in munin, but are also concise (see references).
+Most things in this repository rely heavily on the request-log-analyzer gem.
+
+== What's in the box
+
+* rails_requests - Running, active and maximum number of passenger instances as well as sessions.
+* rails_database_time - Min, avg, max of database times.
+* rails_request_duration - Min, avg, max of the total request durations.
+* rails_request_error - Application errors and process blocker counters.
+* rails_requests - Get, put, post and delete requests.
+* rails_view_render_time - Min, avg and max view render times.
 
 == Installation
 
-See plugins for more information.
+The plugins follow the default munin installation scheme:
+* git clone git://github.com/barttenbrinke/munin-plugins-rails.git
+* cp rails_requests /usr/share/munin/plugins/
+* chmod +x /usr/share/munin/plugins/rails_requests
+* ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
+* vi /etc/munin/plugin-conf.d/munin-node
+
+Paste the configuration from the documentation of rails_requests into the munin-node file.
+    [rails_requests]
+    env.log_file '/path/to/production.log'
+    user www-data
+    command /usr/local/bin/ruby %c
+
+Run "/etc/munin/plugins/passenger-status autoconf" and "/etc/munin/plugins/passenger-status" to test the plugin.
+
+For more detailed information, see the documentation embedded in the plugin.
+Each plugin is packed with an example config and a ln -s you can copy.
+
+== Problems
+* sudo gem install request-log-analyzer
+* Check if the paths in the plugin configuration are correct.
+* Make sure the specified user is allowed to write to /tmp and access your rails logfile.
+
+If you encounter performance problems with your app, please take a look at the request-log-analyzer wiki on
+examples on how to drill down to the core of your problem. If you want to hire an expert, please visit us at
+railsdoctors.com or mail me at: bart@railsdoctors.com
+
+Happy monitoring!
 
 == Additional information
 * Railsdoctors homepage: http://railsdoctors.com
-
-* http://munin.projects.linpro.no/wiki/HowToWritePlugins
-* http://munin.projects.linpro.no/wiki/ConcisePlugins
+* Request-log-analzer: http://github.com/wvanbergen/request-log-analyzer/
+* Munin: http://munin.projects.linpro.no/wiki/ConcisePlugins
 
