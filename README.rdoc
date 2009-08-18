@@ -1,13 +1,11 @@
 = Munin-Rails-Plugins
-
 Collection of Consise Munin plugins for Rails server environments.
 This will make monitoring your rails app a piece of cake.
 
 This project containse munin plugins that not only work in munin, but are also concise (see references).
 Most things in this repository rely heavily on the request-log-analyzer gem.
 
-== What's in the box
-
+== What's in the box?
 * rails_requests - Running, active and maximum number of passenger instances as well as sessions.
 * rails_database_time - Min, avg, max of database times.
 * rails_request_duration - Min, avg, max of the total request durations.
@@ -16,13 +14,12 @@ Most things in this repository rely heavily on the request-log-analyzer gem.
 * rails_view_render_time - Min, avg and max view render times.
 
 == Installation
-
 The plugins follow the default munin installation scheme:
-* git clone git://github.com/barttenbrinke/munin-plugins-rails.git
-* cp rails_requests /usr/share/munin/plugins/
-* chmod +x /usr/share/munin/plugins/rails_requests
-* ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
-* vi /etc/munin/plugin-conf.d/munin-node
+    git clone git://github.com/barttenbrinke/munin-plugins-rails.git
+    cp rails_requests /usr/share/munin/plugins/
+    chmod +x /usr/share/munin/plugins/rails_requests
+    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
+    vi /etc/munin/plugin-conf.d/munin-node
 
 Paste the configuration from the documentation of rails_requests into the munin-node file.
     [rails_requests]
@@ -47,7 +44,8 @@ railsdoctors.com or mail me at: bart@railsdoctors.com
 Happy monitoring!
 
 == Additional information
-* Railsdoctors homepage: http://railsdoctors.com
-* Request-log-analzer: http://github.com/wvanbergen/request-log-analyzer/
-* Munin: http://munin.projects.linpro.no/wiki/ConcisePlugins
+* Railsdoctors:         http://railsdoctors.com
+* Request-log-analzer:  http://github.com/wvanbergen/request-log-analyzer/
+* Munin:                http://munin.projects.linpro.no/wiki/ConcisePlugins
+* License:              Ruby
 
