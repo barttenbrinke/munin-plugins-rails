@@ -33,7 +33,7 @@ All HTTP methods are stacked so that the total equals the amount of requests pro
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.2
+1.4
 
 =head1 BUGS
 None known

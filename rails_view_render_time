@@ -32,7 +32,7 @@ Three lines are graphed, showing the minimum, average and maximum view render ti
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.2
+1.4
 
 =head1 BUGS
 None known
@@ -144,7 +144,7 @@ def run(log_file, debug = false)
       max_value = item[1][:max] if item[1][:max] > max_value
       min_value = item[1][:min] if item[1][:min] < min_value
       hits += item[1][:hits]
-      cumulative += item[1][:cumulative]
+      cumulative += item[1][:sum]
     end
   else
     hits = 1

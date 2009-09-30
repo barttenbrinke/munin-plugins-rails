@@ -33,7 +33,7 @@ blockers. Process blockers are requests that took longer than 1 second to comple
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.2
+1.4
 
 =head1 BUGS
 None known
