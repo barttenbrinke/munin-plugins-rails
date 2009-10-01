@@ -6,7 +6,7 @@ This project containse munin plugins that not only work in munin, but are also c
 Most things in this repository rely heavily on the request-log-analyzer gem.
 
 == What's in the box?
-* rails_requests - Running, active and maximum number of passenger instances as well as sessions.
+* passenger_status - Running, active and maximum number of passenger instances as well as sessions.
 * rails_database_time - Min, avg, max of database times.
 * rails_request_duration - Min, avg, max of the total request durations.
 * rails_request_error - Application errors and process blocker counters.
@@ -16,7 +16,7 @@ Most things in this repository rely heavily on the request-log-analyzer gem.
 == Installation
 The plugins follows the default munin installation scheme:
     git clone git://github.com/barttenbrinke/munin-plugins-rails.git
-    cp rails_requests /usr/share/munin/plugins/
+    cp munin-plugins-rails/rails_requests /usr/share/munin/plugins/
     chmod +x /usr/share/munin/plugins/rails_requests
     ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
     vi /etc/munin/plugin-conf.d/munin-node
@@ -27,7 +27,7 @@ Paste the configuration from the documentation of rails_requests into the munin-
     user www-data
     command /usr/local/bin/ruby %c
 
-Run "/etc/munin/plugins/passenger-status autoconf" and "/etc/munin/plugins/passenger-status" to test the plugin.
+Run "/etc/munin/plugins/rails_requests autoconf" and "/etc/munin/plugins/rails_requests" to test the plugin.
 
 For more detailed information, see the documentation embedded in the plugin.
 Each plugin is packed with an example config and a ln -s you can copy.
