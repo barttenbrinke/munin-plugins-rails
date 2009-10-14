@@ -13,6 +13,8 @@ Most things in this repository rely heavily on the request-log-analyzer gem.
 * rails_requests - Get, put, post and delete requests.
 * rails_view_render_time - Min, avg and max view render times.
 
+For screenshots, head over to: http://barttenbrinke.github.com/munin-plugins-rails/
+
 == Installation
 The plugins follows the default munin installation scheme:
     git clone git://github.com/barttenbrinke/munin-plugins-rails.git
@@ -46,6 +48,7 @@ Happy monitoring!
 == Additional information
 * Railsdoctors:         http://railsdoctors.com
 * Request-log-analzer:  http://github.com/wvanbergen/request-log-analyzer/
+* Screenshots           http://barttenbrinke.github.com/munin-plugins-rails/
 * Munin:                http://munin.projects.linpro.no/wiki/ConcisePlugins
 * License:              MIT
 
