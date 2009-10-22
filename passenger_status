@@ -29,7 +29,7 @@ The plugin shows the maximum, active and current number of running passenger ins
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.1
+1.4
 
 =head1 BUGS
 None known
@@ -77,7 +77,7 @@ def config
 graph_category App
 graph_title Passenger status
 graph_vlabel count
-graph_args --base 1000 -l 0 --upperlimit #{upper_limit}
+graph_args --base 1000 -l 0 --upper-limit #{upper_limit}
 graph_info The amount of active passengers on this application server - railsdoctors.com
  
 sessions.label sessions
