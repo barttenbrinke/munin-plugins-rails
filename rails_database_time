@@ -152,7 +152,7 @@ def run(log_file, debug = false)
   end
   
   # Report in seconds
-  puts "max.value #{max_value"
+  puts "max.value #{max_value}"
   puts "min.value #{min_value}"
   puts "average.value #{cumulative / hits.to_f}"
 end
