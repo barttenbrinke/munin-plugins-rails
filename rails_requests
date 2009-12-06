@@ -81,7 +81,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title Processed requests
-graph_vlabel requests / #{INTERVAL / 60} minutes
+graph_vlabel Requests per second
 graph_info The amount of requests processed by this application server - railsdoctors.com
  
 get.label get
@@ -153,11 +153,11 @@ def run(log_file, debug = false)
       delete_value = match[1]
     end
   }
-  
-  puts "get.value #{get_value}"
-  puts "post.value #{post_value}"
-  puts "put.value #{put_value}"
-  puts "delete.value #{delete_value}"
+
+  puts "get.value #{get_value / INTERVAL.to_f}"
+  puts "post.value #{post_value / INTERVAL.to_f}"
+  puts "put.value #{put_value / INTERVAL.to_f}"
+  puts "delete.value #{delete_value / INTERVAL.to_f}"
 end
 
 # Main

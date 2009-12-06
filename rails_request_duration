@@ -81,7 +81,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title Request time
-graph_vlabel Time in ms
+graph_vlabel Seconds
 graph_args --base 1000 -l 0
 graph_info The minimum, maximum and average request times - railsdoctors.com
  
@@ -151,9 +151,9 @@ def run(log_file, debug = false)
     min_value = 0
   end
   
-  puts "max.value #{(max_value*1000).to_i}"
-  puts "min.value #{(min_value*1000).to_i}"
-  puts "average.value #{((cumulative / hits)*1000).to_i}"
+  puts "max.value #{max_value}"
+  puts "min.value #{min_value}"
+  puts "average.value #{cumulative / hits.to_f}"
 end
 
 # Main

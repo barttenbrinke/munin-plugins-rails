@@ -82,7 +82,7 @@ def config
   puts <<-CONFIG
 graph_category App
 graph_title Request errors
-graph_vlabel Amount
+graph_vlabel Count
 graph_info The amount of request errors - railsdoctors.com
  
 error.label error
