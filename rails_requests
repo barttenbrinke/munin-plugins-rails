@@ -144,13 +144,13 @@ def run(log_file, debug = false)
   # Walk through the 
   File.open(fetch_or_create_yaml_file(log_file, debug)).each_line{ |line|
     if match = line.match(/^\s+GET\:\s(\d+).*/)
-      get_value = match[1]
+      get_value = match[1].to_i
     elsif match = line.match(/^\s+POST\:\s(\d+).*/)
-      post_value = match[1]
+      post_value = match[1].to_i
     elsif match = line.match(/^\s+PUT\:\s(\d+).*/)
-      put_value = match[1]
+      put_value = match[1].to_i
     elsif match = line.match(/^\s+DELETE\:\s(\d+).*/)
-      delete_value = match[1]
+      delete_value = match[1].to_i
     end
   }
 
