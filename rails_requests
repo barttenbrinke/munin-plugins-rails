@@ -47,6 +47,7 @@ MIT
 POD
 
 # Globals
+GRAPH_CATEGORY  = ENV['graph_category'] || 'App'
 INTERVAL        = ENV['interval'] ? ENV['interval'].to_i : 300
 NUMBER_OF_LINES = ENV['lines'] || 50000
 LOG_FILE        = ENV['log_file']
@@ -79,7 +80,7 @@ end
 # Uptput the config
 def config
   puts <<-CONFIG
-graph_category App
+graph_category #{GRAPH_CATEGORY}
 graph_title Processed requests
 graph_vlabel Requests per second
 graph_info The amount of requests processed by this application server - railsdoctors.com
