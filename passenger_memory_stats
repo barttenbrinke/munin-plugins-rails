@@ -1,0 +1,122 @@
+#!/usr/bin/env ruby
+pod=<<-POD
+
+=head1 NAME
+passenger_memory_stats - Munin plugin to monitor passenger application servers.
+Monitors the memory consumed by passenger instances.
+
+=head1 APPLICABLE SYSTEMS
+All systems that have passenger installed.
+
+=head1 CONFIGURATION
+The plugin needs to execute passenger-memory-stats.
+This configuration section shows the defaults of the plugin:
+
+  [passenger_*]
+  user root
+  command /usr/local/bin/ruby %c
+  
+Options
+  env.passenger_memory_stats '/path/to/passenger-memory-stats'
+
+ln -s /usr/share/munin/plugins/passenger_memory_stats /etc/munin/plugins/passenger_memory_stats
+
+=head1 INTERPRETATION
+The plugin shows the memory consumed by passenger instances.
+
+=head1 MAGIC MARKERS
+  #%# family=auto
+  #%# capabilities=autoconf
+
+=head1 VERSION
+0.1
+
+=head1 BUGS
+None known
+
+=head1 AUTHOR
+Ilya Lityuga
+(based on Bart ten Brinke's passenger_status - railsdoctors.com)
+
+=head1 LICENSE
+MIT
+
+POD
+
+# Globals
+GRAPH_CATEGORY   = ENV['graph_category'] || 'App'
+PASSENGER_MEMORY_STATS = ENV['passenger_memory_stats'] || '/usr/local/bin/passenger-memory-stats'
+
+# Check if this plugin can run
+def autoconf
+  begin
+    require 'rubygems'
+    gem "passenger", ">=2.0"
+  rescue Exception => e
+    puts "no (Gem not found: #{e})"
+    exit 1
+  end
+  
+  status = `#{PASSENGER_MEMORY_STATS}`
+  unless $?.success?
+    puts "no (error when executing #{PASSENGER_MEMORY_STATS})"
+    exit 1
+  end
+  
+  puts "yes"
+  exit 0
+end
+
+# Describe the graph config
+def config
+  status = `#{PASSENGER_MEMORY_STATS}`
+  memory_info = open('/proc/meminfo', 'r') do |lines|
+    lines.inject({}) do |h, line|
+      matched = line.match(/^([\w_\(\)]+):\s+(\d+)/)
+      h[matched[1].to_sym] = matched[2].to_i * 1024
+      h
+    end
+  end
+  upper_limit = memory_info[:MemTotal]
+  puts <<-CONFIG
+graph_category #{GRAPH_CATEGORY}
+graph_title Passenger memory stats
+graph_vlabel Bytes
+graph_args --base 1000 -l 0 --upper-limit #{upper_limit}
+graph_info The memory used by passenger instances on this application server
+ 
+memory.label memory
+CONFIG
+  exit 0
+end
+ 
+
+# Collect the data
+# <tt>debug</tt> Show debug information
+def run(debug = false)
+  stats = `#{PASSENGER_MEMORY_STATS}`
+  
+  unless $?.success?
+    $stderr.puts "failed executing passenger-memory-stats"
+    exit 1
+  end
+
+  puts stats if debug
+
+  #### Total private dirty RSS: 81.81 MB
+  stats =~ /RSS:\s*([\d\.]+)\s*MB\Z/m
+  memory = ($1.to_f * 1024 * 1024).to_i
+  puts "memory.value #{memory}"
+end
+ 
+
+# Main
+if ARGV[0] == "config"
+  config
+elsif ARGV[0] == "autoconf"
+  autoconf
+elsif ARGV[0] == "debug"
+  run(true)
+else
+  run
+end
