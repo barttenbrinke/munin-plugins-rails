@@ -17,7 +17,8 @@ This configuration section shows the defaults of the plugin:
   command /usr/local/bin/ruby %c
   
 Options
-  env.passenger_status '/path/to/passenger-status'
+  env.passenger_status '/path/to/passenger-status'  # Path to passenger-status
+  env.graph_category 'App'                          # Graph Category. Defaults to App.
 
 ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
 
@@ -29,14 +30,14 @@ The plugin shows the maximum, active and current number of running passenger ins
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.4
+1.5
 
 =head1 BUGS
 None known
 
 =head1 AUTHOR
 Bart ten Brinke - railsdoctors.com
-(based on Daniel Manges - http://gist.github.com/20319)
+Daniel Manges - http://gist.github.com/20319
 
 =head1 LICENSE
 MIT

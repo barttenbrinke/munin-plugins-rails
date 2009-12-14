@@ -2,7 +2,7 @@
 pod=<<-POD
 
 =head1 NAME
-passenger_memory_stats - Munin plugin to monitor passenger application servers.
+passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
 Monitors the memory consumed by passenger instances.
 
 =head1 APPLICABLE SYSTEMS
@@ -17,7 +17,8 @@ This configuration section shows the defaults of the plugin:
   command /usr/local/bin/ruby %c
   
 Options
-  env.passenger_memory_stats '/path/to/passenger-memory-stats'
+  env.passenger_memory_stats '/path/to/passenger-memory-stats'  # Path to passenger memory status.
+  env.graph_category 'App'                                      # Graph Category. Defaults to App.
 
 ln -s /usr/share/munin/plugins/passenger_memory_stats /etc/munin/plugins/passenger_memory_stats
 
@@ -29,14 +30,14 @@ The plugin shows the memory consumed by passenger instances.
   #%# capabilities=autoconf
 
 =head1 VERSION
-0.1
+1.5
 
 =head1 BUGS
 None known
 
 =head1 AUTHOR
 Ilya Lityuga
-(based on Bart ten Brinke's passenger_status - railsdoctors.com)
+Bart ten Brinke - railsdoctors.com
 
 =head1 LICENSE
 MIT
@@ -44,8 +45,8 @@ MIT
 POD
 
 # Globals
-GRAPH_CATEGORY   = ENV['graph_category'] || 'App'
-PASSENGER_MEMORY_STATS = ENV['passenger_memory_stats'] || '/usr/local/bin/passenger-memory-stats'
+GRAPH_CATEGORY          = ENV['graph_category'] || 'App'
+PASSENGER_MEMORY_STATS  = ENV['passenger_memory_stats'] || '/usr/local/bin/passenger-memory-stats'
 
 # Check if this plugin can run
 def autoconf

@@ -21,6 +21,7 @@ Options
   env.lines 50000                             # Number of lines to tail
   env.interval 300                            # Munin interval in seconds (used for graphs and caching)
   env.request_log_analyzer '/usr/local/bin'   # Path to gem. Use this for Debian.
+  env.graph_category 'App'                    # Graph Category. Defaults to App.
 
 ln -s /usr/share/munin/plugins/rails_request_error /etc/munin/plugins/rails_request_error
 
@@ -33,7 +34,7 @@ blockers. Process blockers are requests that took longer than 1 second to comple
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.4
+1.5
 
 =head1 BUGS
 None known
