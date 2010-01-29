@@ -30,7 +30,7 @@ Paste the configuration from the documentation of rails_requests into the munin-
     user www-data
     command /usr/local/bin/ruby %c
 
-Run "/etc/munin/plugins/rails_requests autoconf" and "/etc/munin/plugins/rails_requests" to test the plugin.
+Run "/etc/munin/plugins/rails_requests autoconf" and "munin-run rails_requests" to test the plugin.
 
 For more detailed information, see the documentation embedded in the plugin.
 Each plugin is packed with an example config and a ln -s you can copy.
