@@ -35,6 +35,24 @@ Run "/etc/munin/plugins/rails_requests autoconf" and "munin-run rails_requests" 
 For more detailed information, see the documentation embedded in the plugin.
 Each plugin is packed with an example config and a ln -s you can copy.
 
+== Monitoring multiple applications
+
+If you want to run the plugin for more than one app the best way is to symlink the plugin multiple times.
+Also set a different graph_category for each of app. For instance:
+
+    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_app1_requests
+    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_app2_requests
+
+And in the munin-node file:
+
+    [rails_app1_*]
+    env.log_file '/path/to/app1/production.log'
+    env.graph_category App1
+
+    [rails_app2_*]
+    env.log_file '/path/to/app2/production.log'
+    env.graph_category App2
+
 == Problems
 * sudo gem install request-log-analyzer
 * Check if the paths in the plugin configuration are correct.
