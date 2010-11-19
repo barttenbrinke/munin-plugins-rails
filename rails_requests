@@ -21,7 +21,7 @@ This configuration section shows the defaults of the plugin:
 Options
   env.lines 50000                             # Number of lines to tail
   env.interval 300                            # Munin interval in seconds (used for graphs and caching)
-  env.log_format                              # Manually pass log format for failed autodetect
+  env.log_format rails3                       # Manually pass log format for failed autodetect
   env.request_log_analyzer '/usr/local/bin'   # Path to gem. Use this for Debian.
   env.graph_category 'App'                    # Graph Category. Defaults to App.
 
