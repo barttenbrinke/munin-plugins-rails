@@ -21,7 +21,7 @@ This configuration section shows the defaults of the plugin:
 Options
   env.lines 50000                             # Number of lines to tail
   env.interval 300                            # Munin interval in seconds (used for graphs and caching)
-  env.log_format rails3                       # Manually pass log format for failed autodetect
+  env.log_format                              # request-log-analyzer log format (passed to '--format')
   env.request_log_analyzer '/usr/local/bin'   # Path to gem. Use this for Debian.
   env.graph_category 'App'                    # Graph Category. Defaults to App.
 
@@ -53,7 +53,7 @@ GRAPH_CATEGORY  = ENV['graph_category'] || 'App'
 INTERVAL        = ENV['interval'] ? ENV['interval'].to_i : 300
 NUMBER_OF_LINES = ENV['lines'] || 50000
 LOG_FILE        = ENV['log_file']
-LOG_FORMAT      = "--format #{ENV['log_format']}" if ENV['log_format']
+LOG_FORMAT      = "--format #{ENV['log_format']}"
 AFTER_TIME      = (Time.now - INTERVAL).strftime('%Y%m%d%H%M%S')
 FLOOR_TIME      = Time.at((Time.now.to_f / INTERVAL).floor * INTERVAL)
 
@@ -120,6 +120,7 @@ def fetch_or_create_yaml_file(log_file, debug = false)
     puts "Processing the last #{NUMBER_OF_LINES} lines of #{log_file} which are less then #{INTERVAL} seconds old." if debug    
     p "tail -n #{NUMBER_OF_LINES} #{log_file} | #{REQUEST_LOG_ANALYZER} - --after #{AFTER_TIME} #{LOG_FORMAT} -b --dump #{temp_file} 2>/dev/null"
     status = `tail -n #{NUMBER_OF_LINES} #{log_file} | #{REQUEST_LOG_ANALYZER} - --after #{AFTER_TIME} #{LOG_FORMAT} -b --dump #{temp_file} 2>/dev/null`
+
 
     unless $?.success?
       $stderr.puts "failed executing request-log-analyzer. Is the path to the binary correct?"
