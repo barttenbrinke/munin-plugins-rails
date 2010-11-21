@@ -34,7 +34,7 @@ Three lines are graphed, showing the minimum, average and maximum request times.
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.5
+1.9.7
 
 =head1 BUGS
 None known

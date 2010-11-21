@@ -30,7 +30,7 @@ The plugin shows the memory consumed by passenger instances.
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.5
+1.9.7
 
 =head1 BUGS
 None known
