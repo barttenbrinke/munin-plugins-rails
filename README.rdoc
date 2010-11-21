@@ -7,6 +7,7 @@ Most things in this repository rely heavily on the request-log-analyzer gem.
 
 == What's in the box?
 * passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
+* pasenger_queue - Montoring of passenger queue lenth.
 * passenger_status - Running, active and maximum number of passenger instances as well as sessions.
 * rails_database_time - Min, avg, max of database times.
 * rails_request_duration - Min, avg, max of the total request durations.

@@ -53,7 +53,7 @@ GRAPH_CATEGORY  = ENV['graph_category'] || 'App'
 INTERVAL        = ENV['interval'] ? ENV['interval'].to_i : 300
 NUMBER_OF_LINES = ENV['lines'] || 50000
 LOG_FILE        = ENV['log_file']
-LOG_FORMAT      = "--format #{ENV['log_format']}"
+LOG_FORMAT      = ENV['log_format'] ? "--format #{ENV['log_format']}" : ''
 AFTER_TIME      = (Time.now - INTERVAL).strftime('%Y%m%d%H%M%S')
 FLOOR_TIME      = Time.at((Time.now.to_f / INTERVAL).floor * INTERVAL)
 
