@@ -15,11 +15,11 @@ This configuration section shows the defaults of the plugin:
   [passenger_*]
   user root
   command /usr/local/bin/ruby %c
-  
+
 Options
   env.passenger_status '/path/to/passenger-status'  # Path to passenger-status
-  env.apache_pid_file '/path/to/apache2.pid'        # Path to passenger-status (like /var/run/apache2.pid)
   env.graph_category 'App'                          # Graph Category. Defaults to App.
+  env.apache_pid_file '/var/run/apache2.pid'        # Use if you want to monitor multiple installations.
 
 ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
 
@@ -31,7 +31,7 @@ The plugin shows the maximum, active and current number of running passenger ins
   #%# capabilities=autoconf
 
 =head1 VERSION
-1.9.7
+1.9.7.1
 
 =head1 BUGS
 None known
@@ -48,7 +48,7 @@ POD
 # Globals
 GRAPH_CATEGORY   = ENV['graph_category'] || 'App'
 PASSENGER_STATUS = ENV['passenger_status'] || '/usr/local/bin/passenger-status'
-#to use if you have multiple passenger on the host like phusion passenger standalone
+# Cat Apache PID to pass to passenger_status
 if ENV['apache_pid_file']
   PASSENGER_STATUS = "cat #{ENV['apache_pid_file']} | xargs -0 #{PASSENGER_STATUS}"
 end
@@ -62,13 +62,13 @@ def autoconf
     puts "no (Gem not found: #{e})"
     exit 1
   end
-  
+
   status = `#{PASSENGER_STATUS}`
   unless $?.success?
     puts "no (error whene excuting #{PASSENGER_STATUS})"
     exit 1
   end
-  
+
   puts "yes"
   exit 0
 end
@@ -76,7 +76,7 @@ end
 # Describe the graph config
 def config
   status = `#{PASSENGER_STATUS}`
-  
+
   status =~ /max\s+=\s+(\d+)/
   upper_limit = $1 || 150
 
@@ -86,7 +86,7 @@ graph_title Passenger status
 graph_vlabel count
 graph_args --base 1000 -l 0 --upper-limit #{upper_limit}
 graph_info The amount of active passengers on this application server - railsdoctors.com
- 
+
 sessions.label sessions
 max.label max processes
 running.label running processes
@@ -94,13 +94,13 @@ active.label active processes
 CONFIG
   exit 0
 end
- 
+
 
 # Collect the data
 # <tt>debug</tt> Show debug information
 def run(debug = false)
   status = `#{PASSENGER_STATUS}`
-  
+
   unless $?.success?
     $stderr.puts "failed executing passenger-status"
     exit 1
@@ -110,18 +110,18 @@ def run(debug = false)
 
   status =~ /max\s+=\s+(\d+)/
   puts "max.value #{$1}"
- 
+
   status =~ /count\s+=\s+(\d+)/
   puts "running.value #{$1}"
- 
+
   status =~ /active\s+=\s+(\d+)/
   puts "active.value #{$1}"
- 
+
   total_sessions = 0
   status.scan(/Sessions: (\d+)/).flatten.each { |count| total_sessions += count.to_i }
   puts "sessions.value #{total_sessions}"
 end
- 
+
 
 # Main
 if ARGV[0] == "config"
