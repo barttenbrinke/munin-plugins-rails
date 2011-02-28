@@ -49,7 +49,7 @@ POD
 GRAPH_CATEGORY   = ENV['graph_category'] || 'App'
 PASSENGER_STATUS = ENV['passenger_status'] || '/usr/local/bin/passenger-status'
 #to use if you have multiple passenger on the host like phusion passenger standalone
-if ENV['passenger_pid_file']
+if ENV['apache_pid_file']
   PASSENGER_STATUS = "cat #{ENV['apache_pid_file']} | xargs -0 #{PASSENGER_STATUS}"
 end
 
