@@ -16,7 +16,8 @@ This configuration section shows the defaults of the plugin:
   env.log_file '/path/to/production.log'
   user www-data
   command /usr/local/bin/ruby %c
-  
+  log_format rails3
+
 Options
   env.lines 50000                             # Number of lines to tail
   env.interval 300                            # Munin interval in seconds (used for graphs and caching)
@@ -77,7 +78,7 @@ def autoconf
     puts "no (tail command not found)"
     exit 1
   end
-  
+
   puts "yes"
   exit 0
 end
@@ -89,7 +90,7 @@ graph_category #{GRAPH_CATEGORY}
 graph_title Request errors
 graph_vlabel Count
 graph_info The amount of request errors - railsdoctors.com
- 
+
 error.label error
 blocker.label blocker
 CONFIG
@@ -102,16 +103,16 @@ def fetch_or_create_yaml_file(log_file, debug = false)
     if match = file_name.match(/^#{TEMP_PREFIX}_.*\.yml/)
       if match[0] != TEMP_FILE
         puts "Removing old cache file: #{file_name}" if debug
-        File.delete(TEMP_FOLDER + "/" + file_name) 
+        File.delete(TEMP_FOLDER + "/" + file_name)
       end
     end
   end
-  
+
   temp_file = TEMP_FOLDER + "/" + TEMP_FILE
-  
+
   # Create temp file rla if needed
   unless File.exists?(temp_file)
-    puts "Processing the last #{NUMBER_OF_LINES} lines of #{log_file} which are less then #{INTERVAL} seconds old." if debug    
+    puts "Processing the last #{NUMBER_OF_LINES} lines of #{log_file} which are less then #{INTERVAL} seconds old." if debug
     status = `tail -n #{NUMBER_OF_LINES} #{log_file} | #{REQUEST_LOG_ANALYZER} - --after #{AFTER_TIME} #{LOG_FORMAT} -b --dump #{temp_file} 2>/dev/null`
 
     unless $?.success?
@@ -119,9 +120,9 @@ def fetch_or_create_yaml_file(log_file, debug = false)
       exit 1
     end
   else
-    puts "Processing cached YAML result #{temp_file}" if debug      
+    puts "Processing cached YAML result #{temp_file}" if debug
   end
-  
+
   return temp_file
 end
 
@@ -130,29 +131,29 @@ def run(log_file, debug = false)
 
   if log_file == "" || log_file.nil?
     $stderr.puts "Filepath unspecified. Exiting"
-    exit 1  
+    exit 1
   end
 
   # Initialize values
   error_value = 0
   blocker_value = 0
-  
+
   # Walk through the
   require "yaml"
   rla = YAML::load_file( fetch_or_create_yaml_file(log_file, debug) )
 
-  if rla && rla["Failed requests"]  
+  if rla && rla["Failed requests"]
     rla["Failed requests"].each do |item|
       error_value += item[1]
     end
   end
-  
+
   if rla && rla["Process blockers (> 1 sec duration)"]
     rla["Process blockers (> 1 sec duration)"].each do |item|
       blocker_value += item[1]
     end
   end
-  
+
   puts "error.value #{error_value}"
   puts "blocker.value #{blocker_value}"
 end

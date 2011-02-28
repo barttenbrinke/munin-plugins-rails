@@ -17,6 +17,7 @@ This configuration section shows the defaults of the plugin:
   env.log_file '/path/to/production.log'
   user www-data
   command /usr/local/bin/ruby %c
+  log_format rails3
   
 Options
   env.lines 50000                             # Number of lines to tail
