@@ -18,6 +18,7 @@ This configuration section shows the defaults of the plugin:
   
 Options
   env.passenger_status '/path/to/passenger-status'  # Path to passenger-status
+  env.apache_pid_file '/path/to/apache2.pid'        # Path to passenger-status (like /var/run/apache2.pid)
   env.graph_category 'App'                          # Graph Category. Defaults to App.
 
 ln -s /usr/share/munin/plugins/passenger_queue /etc/munin/plugins/passenger_queue
@@ -48,6 +49,10 @@ POD
 # Globals
 GRAPH_CATEGORY   = ENV['graph_category'] || 'App'
 PASSENGER_STATUS = ENV['passenger_status'] || '/usr/local/bin/passenger-status'
+#to use if you have multiple passenger on the host like phusion passenger standalon
+if ENV['passenger_pid_file']
+  PASSENGER_STATUS = "cat #{ENV['apache_pid_file']} | xargs -0 #{PASSENGER_STATUS}"
+end
 
 # Check if this plugin can run
 def autoconf
