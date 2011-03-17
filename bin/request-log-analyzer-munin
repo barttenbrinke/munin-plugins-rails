@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
+
 require 'munin-plugins-rails'
 Munin::Command.new.run(ARGV)
