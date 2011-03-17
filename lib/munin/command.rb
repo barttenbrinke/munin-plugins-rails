@@ -27,6 +27,7 @@ env.log_file <%= options[:log_file] %>
 user root
 command /usr/local/bin/ruby %c
 env.request_log_analyzer /usr/local/bin/request-log-analyzer    
+env.graph_category <%= plugin_target_name %>
 DATA
 
     def install_application(args)
