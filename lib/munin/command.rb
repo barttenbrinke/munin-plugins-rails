@@ -19,6 +19,7 @@ user root
 command /usr/local/bin/ruby %c
 env.passenger_status '/usr/local/bin/passenger-status'
 env.passenger_memory_stats '/usr/local/bin/passenger-memory-stats'    
+env.graph_category Passenger
 DATA
 
     RAILS_PLUGIN_CONFIG = <<-DATA
