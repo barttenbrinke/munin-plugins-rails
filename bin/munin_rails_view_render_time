@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+pod=<<-POD
+
+=head1 NAME
+rails_view_render_time - Munin plugin to monitor the minimum, average and maximum view render times.
+
+=head1 APPLICABLE SYSTEMS
+All systems that have a rails application log.
+
+=head1 CONFIGURATION
+The request-log-analyzer gem has to be intalled.
+Also the script has to be able to access the rails log file and tail.
+This configuration section shows the defaults of the plugin:
+
+  [rails_view_render_time]
+  env.log_file '/path/to/production.log'
+  user www-data
+  command /usr/local/bin/ruby %c
+  log_format rails3
+
+Options
+  env.lines 50000                             # Number of lines to tail
+  env.interval 300                            # Munin interval in seconds (used for graphs and caching)
+  env.log_format                              # request-log-analyzer log format (passed to '--format')
+  env.request_log_analyzer '/usr/local/bin'   # Path to gem. Use this for Debian.
+  env.graph_category 'App'                    # Graph Category. Defaults to App.
+
+ln -s /usr/share/munin/plugins/rails_view_render_time /etc/munin/plugins/rails_view_render_time
+
+=head1 INTERPRETATION
+Three lines are graphed, showing the minimum, average and maximum view render times.
+
+=head1 MAGIC MARKERS
+  #%# family=auto
+  #%# capabilities=autoconf
+
+=head1 VERSION
+1.9.7
+
+=head1 BUGS
+None known
+
+=head1 AUTHOR
+Bart ten Brinke - railsdoctors.com
+
+=head1 LICENSE
+MIT
+
+POD
+require 'munin-plugins-rails'
+Munin::RailsViewRenderTime.new(ARGV, ENV).run

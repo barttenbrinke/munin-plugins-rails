@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'munin-plugins-rails'
+Munin::Command.new(ARGV, ENV)
