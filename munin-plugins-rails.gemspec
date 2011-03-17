@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = "0.2.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Andrew Eberbach", ""]
+  s.authors = ["Andrew Eberbach", "Bart ten Brinke"]
   s.date = %q{2011-03-17}
   s.default_executable = %q{request-log-analyzer-munin}
   s.email = %q{andrew@ebertech.ca}
