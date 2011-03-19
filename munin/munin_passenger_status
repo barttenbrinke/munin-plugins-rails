@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+pod=<<-POD
+
+=head1 NAME
+passenger_status - Munin plugin to monitor passenger application servers.
+Monitors the amount of sessions and running, active and maximum amount of passenger instances.
+
+=head1 APPLICABLE SYSTEMS
+All systems that have passenger installed.
+
+=head1 CONFIGURATION
+The plugin needs to execute passenger-status.
+This configuration section shows the defaults of the plugin:
+
+  [passenger_*]
+  user root
+  command /usr/local/bin/ruby %c
+
+Options
+  env.passenger_status '/path/to/passenger-status'  # Path to passenger-status
+  env.graph_category 'App'                          # Graph Category. Defaults to App.
+  env.apache_pid_file '/var/run/apache2.pid'        # Use if you want to monitor multiple installations.
+
+ln -s /usr/share/munin/plugins/passenger_status /etc/munin/plugins/passenger_status
+
+=head1 INTERPRETATION
+The plugin shows the maximum, active and current number of running passenger instances.
+
+=head1 MAGIC MARKERS
+  #%# family=auto
+  #%# capabilities=autoconf
+
+=head1 VERSION
+1.9.7.1
+
+=head1 BUGS
+None known
+
+=head1 AUTHOR
+Bart ten Brinke - railsdoctors.com
+Daniel Manges - http://gist.github.com/20319
+
+=head1 LICENSE
+MIT
+
+POD
+require 'rubygems'
+require 'munin-plugins-rails'
+
+Munin::PassengerStatus.new(ARGV, ENV).run

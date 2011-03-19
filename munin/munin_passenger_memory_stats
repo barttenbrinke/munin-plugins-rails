@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+pod=<<-POD
+
+=head1 NAME
+passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
+Monitors the memory consumed by passenger instances.
+
+=head1 APPLICABLE SYSTEMS
+All systems that have passenger installed.
+
+=head1 CONFIGURATION
+The plugin needs to execute passenger-memory-stats.
+This configuration section shows the defaults of the plugin:
+
+  [passenger_*]
+  user root
+  command /usr/local/bin/ruby %c
+  
+Options
+  env.passenger_memory_stats '/path/to/passenger-memory-stats'  # Path to passenger memory status.
+  env.graph_category 'App'                                      # Graph Category. Defaults to App.
+
+ln -s /usr/share/munin/plugins/passenger_memory_stats /etc/munin/plugins/passenger_memory_stats
+
+=head1 INTERPRETATION
+The plugin shows the memory consumed by passenger instances.
+
+=head1 MAGIC MARKERS
+  #%# family=auto
+  #%# capabilities=autoconf
+
+=head1 VERSION
+1.9.7
+
+=head1 BUGS
+None known
+
+=head1 AUTHOR
+Ilya Lityuga
+Bart ten Brinke - railsdoctors.com
+
+=head1 LICENSE
+MIT
+
+POD
+require 'rubygems'
+require 'munin-plugins-rails'
+Munin::PassengerMemoryStats.new(ARGV, ENV).run
