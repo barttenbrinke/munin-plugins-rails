@@ -1,8 +1,27 @@
 = Munin-Rails-Plugins
+
 We are currently in the process of converting all the loose scripts into a gem.
 If you are looking for the loose scripts, please checkout https://github.com/barttenbrinke/munin-plugins-rails/tree/stable .
 
 This readme will be updated asap.
+
+Request-log-analyzer-munin, by Andrew Eberbach & Bart ten Brinke
+
+This gem automates munin-plugin scripts and configurations for monitoring of rails apps using the request-log-analyzer gem.
+* Simple
+* Low memory footprint and reasonably fast, so it is safe to run on a production server.
+
+== Installation & basic usage
+
+To install passenger plugins:
+  $ request-log-analyzer-munin install
+
+To install rails plugins:
+  $ request-log-analyzer-munin <app-name> <log-file>
+
+Examples:
+  $ request-log-analyzer-munin install
+  $ request-log-analyzer-munin MyAwesomeApp /srv/my_app/current/log/production.log
 
 Happy monitoring!
 
