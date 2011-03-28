@@ -1,4 +1,29 @@
 #!/usr/bin/env ruby
 
+$:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
+
 require 'munin-plugins-rails'
-Munin::Command.new.run(ARGV)
+
+if ARGV.length > 0
+  Munin::Command.new.run(ARGV)
+else
+  puts "Request-log-analyzer-munin, by Andrew Eberbach & Bart ten Brinke - version 0.2.10"
+  puts
+  puts "This gem automatates munin-plugin configurations for monitoring of rails apps using"
+  puts "the request-log-analyzer gem"
+  puts
+  puts "Usage: request-log-analyzer-munin [install|appname] <OPTIONS>"
+  puts
+  puts
+  puts "To install passenger plugins:"
+  puts "  request-log-analyzer-munin install"
+  puts
+  puts "To install railsplugins:"
+  puts "  request-log-analyzer-munin <app-name> <log-file>"
+  puts
+  puts "Examples:"
+  puts "  request-log-analyzer-munin install"
+  puts "  request-log-analyzer-munin MyAwesomeApp /srv/my_app/current/log/production.log"
+  puts
+  exit(0)
+end
