@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{munin-plugins-rails}
-  s.version = "0.2.10"
+  s.version = "0.2.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Eberbach", "Bart ten Brinke"]
@@ -40,11 +40,10 @@ Gem::Specification.new do |s|
     "munin/munin_rails_view_render_time"
   ]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.5.0}
   s.summary = %q{Plugins for Munin that use passenger and RLA}
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
