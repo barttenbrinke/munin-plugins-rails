@@ -31,6 +31,11 @@ You can add the passenger plugins that will monitor the server as a whole. These
 * passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
 * pasenger_queue - Montoring of passenger queue lenth.
 * passenger_status - Running, active and maximum number of passenger instances as well as sessions.
+* rails_database_time - Min, avg, max of database times.
+* rails_request_duration - Min, avg, max of the total request durations.
+* rails_request_error - Application errors and process blocker counters.
+* rails_requests - Get, put, post and delete requests.
+* rails_view_render_time - Min, avg and max view render times.
 
 To do this run:
 
@@ -45,11 +50,11 @@ This will create the necessary symlinks in /etc/munin/plugins and create reasona
 You can customize these as needed.
 
 You can add a specific application's log file so that you can use the following:
-* rails_database_time - Min, avg, max of database times.
-* rails_request_duration - Min, avg, max of the total request durations.
-* rails_request_error - Application errors and process blocker counters.
-* rails_requests - Get, put, post and delete requests.
-* rails_view_render_time - Min, avg and max view render times.
+* rails_database_time
+* rails_request_duration
+* rails_request_error
+* rails_requests
+* rails_view_render_time
 
 To do this run
 
