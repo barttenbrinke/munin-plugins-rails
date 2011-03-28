@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Eberbach", "Bart ten Brinke"]
-  s.date = %q{2011-03-17}
+  s.date = %q{2011-03-28}
   s.default_executable = %q{request-log-analyzer-munin}
   s.email = %q{andrew@ebertech.ca}
   s.executables = ["request-log-analyzer-munin"]
@@ -47,9 +47,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<request-log-analyzer>, [">= 0"])
     else
+      s.add_dependency(%q<request-log-analyzer>, [">= 0"])
     end
   else
+    s.add_dependency(%q<request-log-analyzer>, [">= 0"])
   end
 end
 
