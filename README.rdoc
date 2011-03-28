@@ -1,67 +1,8 @@
 = Munin-Rails-Plugins
-Collection of Concise Munin plugins for Rails server environments.
-This will make monitoring your rails app a piece of cake.
+We are currently in the process of converting all the loose scripts into a gem.
+If you are looking for the loose scripts, please checkout https://github.com/barttenbrinke/munin-plugins-rails/tree/stable .
 
-This project contains munin plugins that not only work in munin, but are also concise (see references).
-Most things in this repository rely heavily on the request-log-analyzer gem.
-
-== What's in the box?
-* passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
-* pasenger_queue - Montoring of passenger queue lenth.
-* passenger_status - Running, active and maximum number of passenger instances as well as sessions.
-* rails_database_time - Min, avg, max of database times.
-* rails_request_duration - Min, avg, max of the total request durations.
-* rails_request_error - Application errors and process blocker counters.
-* rails_requests - Get, put, post and delete requests.
-* rails_view_render_time - Min, avg and max view render times.
-
-For screenshots, head over to: http://barttenbrinke.github.com/munin-plugins-rails/
-
-== Installation
-The plugins follows the default munin installation scheme:
-    git clone git://github.com/barttenbrinke/munin-plugins-rails.git
-    cp munin-plugins-rails/rails_requests /usr/share/munin/plugins/
-    chmod +x /usr/share/munin/plugins/rails_requests
-    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_requests
-    vi /etc/munin/plugin-conf.d/munin-node
-
-Paste the configuration from the documentation of rails_requests into the munin-node file.
-    [rails_requests]
-    env.log_file '/path/to/production.log'
-    user www-data
-    command /usr/local/bin/ruby %c
-
-Run "/etc/munin/plugins/rails_requests autoconf" and "munin-run rails_requests" to test the plugin.
-
-For more detailed information, see the documentation embedded in the plugin.
-Each plugin is packed with an example config and a ln -s you can copy.
-
-== Monitoring multiple applications
-
-If you want to run the plugin for more than one app the best way is to symlink the plugin multiple times.
-Also set a different graph_category for each of app. For instance:
-
-    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_app1_requests
-    ln -s /usr/share/munin/plugins/rails_requests /etc/munin/plugins/rails_app2_requests
-
-And in the munin-node file:
-
-    [rails_app1_*]
-    env.log_file '/path/to/app1/production.log'
-    env.graph_category App1
-
-    [rails_app2_*]
-    env.log_file '/path/to/app2/production.log'
-    env.graph_category App2
-
-== Problems
-* sudo gem install request-log-analyzer
-* Check if the paths in the plugin configuration are correct.
-* Make sure the specified user is allowed to write to /tmp and access your rails logfile.
-
-If you encounter performance problems with your app, please take a look at the request-log-analyzer wiki on
-examples on how to drill down to the core of your problem. If you want to hire an expert, please visit us at
-http://railsdoctors.com or mail me at: bart@railsdoctors.com
+This readme will be updated asap.
 
 Happy monitoring!
 
@@ -71,4 +12,3 @@ Happy monitoring!
 * Screenshots           http://barttenbrinke.github.com/munin-plugins-rails/
 * Munin:                http://munin.projects.linpro.no/wiki/ConcisePlugins
 * License:              MIT
-
