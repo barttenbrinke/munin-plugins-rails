@@ -4,9 +4,7 @@ This will make monitoring your rails app a piece of cake.
 
 This project contains munin plugins that not only work in munin, but are also concise (see references).
 Most things in this repository rely heavily on the request-log-analyzer gem.
-
-The project has now been converted into a gem.
-If you are looking for the loose scripts, please checkout https://github.com/barttenbrinke/munin-plugins-rails/tree/stable
+The project has recenly been converted into a gem. If you are looking for the loose scripts, please checkout: https://github.com/barttenbrinke/munin-plugins-rails/tree/master/munin.
 
 == What's in the box?
 * passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
@@ -40,8 +38,8 @@ The other option is to add a specific application's logfile. To do this, run:
 
  $ sudo request-log-analyzer-munin add <app_name> <path_to_log_file>
 
-app_name: this will be the prefix for the graphs and the munin plugins so it should be a valid identifier (/[A-Za-z0-9_]*/).
-path_to_log_file: this is the path to the log file against which request-log-analyzer will run
+ * app_name: this will be the prefix for the graphs and the munin plugins so it should be a valid identifier (/[A-Za-z0-9_]*/).
+ * path_to_log_file: this is the path to the log file against which request-log-analyzer will run
 
 After running this command you'll have appropriate symlinks in /etc/munin/plugins and a set of configuration files in /etc/munin/plugin-conf.d:
 
@@ -53,6 +51,8 @@ After running this command you'll have appropriate symlinks in /etc/munin/plugin
 
 For more detailed information, see the documentation embedded in the plugins.
 Remember to restart munin-node.
+
+ $ sudo /etc/init.d/munin-node restart
 
 == Problems
 * sudo gem install request-log-analyzer
