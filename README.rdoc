@@ -1,13 +1,13 @@
 = Munin-Rails-Plugins
 Collection of Concise Munin plugins for Rails server environments.
 This will make monitoring your rails app a piece of cake.
- 
+
 This project contains munin plugins that not only work in munin, but are also concise (see references).
 Most things in this repository rely heavily on the request-log-analyzer gem.
 
-The project has now been converted into a gem. 
-If you are looking for the loose scripts, please checkout https://github.com/barttenbrinke/munin-plugins-rails/tree/stable 
- 
+The project has now been converted into a gem.
+If you are looking for the loose scripts, please checkout https://github.com/barttenbrinke/munin-plugins-rails/tree/stable
+
 == What's in the box?
 * passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
 * pasenger_queue - Montoring of passenger queue lenth.
@@ -17,29 +17,17 @@ If you are looking for the loose scripts, please checkout https://github.com/bar
 * rails_request_error - Application errors and process blocker counters.
 * rails_requests - Get, put, post and delete requests.
 * rails_view_render_time - Min, avg and max view render times.
- 
+
 For screenshots, head over to: http://barttenbrinke.github.com/munin-plugins-rails/
- 
+
 == Installation
 Installing should be as easy as
 
-gem install munin-rails-plugins
+ $ gem install munin-rails-plugins
 
-After that you have two options:
-
-You can add the passenger plugins that will monitor the server as a whole. These include:
-* passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
-* pasenger_queue - Montoring of passenger queue lenth.
-* passenger_status - Running, active and maximum number of passenger instances as well as sessions.
-* rails_database_time - Min, avg, max of database times.
-* rails_request_duration - Min, avg, max of the total request durations.
-* rails_request_error - Application errors and process blocker counters.
-* rails_requests - Get, put, post and delete requests.
-* rails_view_render_time - Min, avg and max view render times.
-
-To do this run:
-
-sudo request-log-analyzer-munin install 
+After that you have two options.
+You can add the passenger plugins that will monitor the server as a whole by running:
+ $ sudo request-log-analyzer-munin install
 
 This will create the necessary symlinks in /etc/munin/plugins and create reasonable configurations in /etc/munin/plugin-conf.d:
 
@@ -47,18 +35,10 @@ This will create the necessary symlinks in /etc/munin/plugins and create reasona
 * munin_passenger_queue
 * munin_passenger_status
 
-You can customize these as needed.
+Which you can customize as needed.
+The other option is to add a specific application's logfile. To do this, run:
 
-You can add a specific application's log file so that you can use the following:
-* rails_database_time
-* rails_request_duration
-* rails_request_error
-* rails_requests
-* rails_view_render_time
-
-To do this run
-
-sudo request-log-analyzer-munin add app_name path_to_log_file
+ $ sudo request-log-analyzer-munin add <app_name> <path_to_log_file>
 
 app_name: this will be the prefix for the graphs and the munin plugins so it should be a valid identifier (/[A-Za-z0-9_]*/).
 path_to_log_file: this is the path to the log file against which request-log-analyzer will run
@@ -71,21 +51,21 @@ After running this command you'll have appropriate symlinks in /etc/munin/plugin
 * app_name_munin_rails_requests
 * app_name_munin_rails_view_render_time
 
-For more detailed information, see the documentation embedded in the plugins. 
+For more detailed information, see the documentation embedded in the plugins.
+Remember to restart munin-node.
 
-Remember to restart munin-node. 
- 
 == Problems
 * sudo gem install request-log-analyzer
 * Check if the paths in the plugin configuration are correct.
+* Use munin-run to test the plugin with the --debug option.
 * Make sure the specified user is allowed to write to /tmp and access your rails logfile.
- 
+
 If you encounter performance problems with your app, please take a look at the request-log-analyzer wiki on
 examples on how to drill down to the core of your problem. If you want to hire an expert, please visit us at
 http://railsdoctors.com or mail me at: bart@railsdoctors.com
- 
+
 Happy monitoring!
- 
+
 == Additional information
 * Railsdoctors:         http://railsdoctors.com
 * Request-log-analzer:  http://github.com/wvanbergen/request-log-analyzer/
