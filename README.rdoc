@@ -21,7 +21,7 @@ For screenshots, head over to: http://barttenbrinke.github.com/munin-plugins-rai
 == Installation
 Installing should be as easy as
 
- $ gem install munin-plugis-rails
+ $ gem install munin-plugins-rails
 
 After that you have two options.
 You can add the passenger plugins that will monitor the server as a whole by running:
