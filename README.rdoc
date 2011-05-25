@@ -55,11 +55,11 @@ Remember to restart munin-node.
  $ sudo /etc/init.d/munin-node restart
 
 == Troubleshooting
-* Specify the format of your logfile in the munin conf i.e: @env.log_format rails3@
-* @sudo gem install request-log-analyzer@
+* Specify the format of your logfile in the munin conf (i.e: <tt>env.log_format rails3</tt>).
+* <tt>sudo gem install request-log-analyzer</tt>
 * Check if the paths in the plugin configuration are correct.
-* Use munin-run to test the plugin with the @--debug@ option.
-* Make sure the specified user is allowed to write to @/tmp@ and read your rails logfile.
+* Use munin-run to test the plugin with the <tt>--debug</tt> option.
+* Make sure the specified user is allowed to write to <tt>/tmp</tt> and read your rails logfile.
 
 If you encounter performance problems with your app, please take a look at the request-log-analyzer wiki on
 examples on how to drill down to the core of your problem. If you want to hire an expert, please visit us at
