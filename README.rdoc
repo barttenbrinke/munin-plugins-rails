@@ -34,6 +34,7 @@ This will create the necessary symlinks in /etc/munin/plugins and create reasona
 * munin_passenger_status
 
 Which you can customize as needed. Please note that passenger-memory-status currently only works on Linux (http://bit.ly/krKO2x).
+
 The other option is to add a specific application's logfile. To do this, run:
 
  $ sudo request-log-analyzer-munin add <app_name> <path_to_log_file>
