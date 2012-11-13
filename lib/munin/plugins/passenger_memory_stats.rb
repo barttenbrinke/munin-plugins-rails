@@ -1,3 +1,5 @@
+#!/bin/env ruby
+# encoding: utf-8
 module Munin
   class PassengerMemoryStats < RequestLogAnalyzerPlugin    
     def ensure_configuration
