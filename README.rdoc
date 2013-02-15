@@ -73,4 +73,5 @@ Happy monitoring!
 * Request-log-analzer:  http://github.com/wvanbergen/request-log-analyzer/
 * Screenshots           http://barttenbrinke.github.com/munin-plugins-rails/
 * Munin:                http://munin.projects.linpro.no/wiki/ConcisePlugins
+* Munin Plugin Starter  http://www.packtpub.com/munin-plugin-starter/book
 * License:              MIT
