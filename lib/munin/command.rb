@@ -27,7 +27,7 @@ DATA
 env.log_file <%= options[:log_file] %>
 user root
 command <%= ruby_path %> %c
-env.request_log_analyzer /usr/local/bin/request-log-analyzer    
+env.request_log_analyzer <%= request_log_analyzer_path %>
 env.graph_category <%= graph_category %>
 DATA
 
@@ -40,7 +40,7 @@ DATA
       RAILS_PLUGINS.each do |plugin|
         plugin_target_name = [app_name, plugin].join("_")
         add_plugin(plugin, plugin_target_name)
-        add_plugin_config(plugin_target_name, app_name, ruby_path, RAILS_PLUGIN_CONFIG, :log_file => log_file)
+        add_plugin_config(plugin_target_name, app_name, ruby_path, `which request-log-analyzer`, RAILS_PLUGIN_CONFIG, :log_file => log_file)
       end      
     end
 
@@ -52,7 +52,7 @@ DATA
       end
     end
 
-    def add_plugin_config(plugin_target_name, graph_category, ruby_path, config_template, options = {})
+    def add_plugin_config(plugin_target_name, graph_category, ruby_path, request_log_analyzer_path, config_template, options = {})
       FileUtils.mkdir_p(munin_plugin_config_path)      
       template = ERB.new config_template
       File.open(File.join(munin_plugin_config_path, plugin_target_name), "w+") do |file|
