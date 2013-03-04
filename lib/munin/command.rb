@@ -16,9 +16,9 @@ module Munin
     PASSENGER_PLUGIN_CONFIG = <<-DATA
 [<%= plugin_target_name %>]
 user root
-command /usr/local/bin/ruby %c
-env.passenger_status '/usr/local/bin/passenger-status'
-env.passenger_memory_stats '/usr/local/bin/passenger-memory-stats'    
+command <%= ruby_path %> %c
+env.passenger_status /usr/bin/env GEM_PATH=<%= gem_path %> GEM_HOME=<%= gem_home %> PATH=<%= path %> <%= passenger_status_path %>
+env.passenger_memory_stats /usr/bin/env GEM_PATH=<%= gem_path %> GEM_HOME=<%= gem_home %> PATH=<%= path %> <%= passenger_memory_stats_path %>
 env.graph_category <%= graph_category %>
 DATA
 
@@ -26,7 +26,7 @@ DATA
 [<%= plugin_target_name %>]    
 env.log_file <%= options[:log_file] %>
 user root
-command /usr/local/bin/ruby %c
+command <%= ruby_path %> %c
 env.request_log_analyzer /usr/local/bin/request-log-analyzer    
 env.graph_category <%= graph_category %>
 DATA
@@ -36,21 +36,31 @@ DATA
     def install_application(args)
       app_name = args.shift
       log_file = args.shift
+      ruby_path = `which ruby`[0...-1]
       RAILS_PLUGINS.each do |plugin|
         plugin_target_name = [app_name, plugin].join("_")
         add_plugin(plugin, plugin_target_name)
-        add_plugin_config(plugin_target_name, app_name, RAILS_PLUGIN_CONFIG, :log_file => log_file)
+        add_plugin_config(plugin_target_name, app_name, ruby_path, RAILS_PLUGIN_CONFIG, :log_file => log_file)
       end      
     end
 
     def install_passenger_plugins
+      ruby_path = `which ruby`[0...-1]
       PASSENGER_PLUGINS.each do |plugin|
         add_plugin(plugin, plugin)
-        add_plugin_config(plugin, PASSENGER_CATEGORY, PASSENGER_PLUGIN_CONFIG)
+        add_passenger_plugin_config(plugin, PASSENGER_CATEGORY, ruby_path, `echo $GEM_PATH`[0...-1], `echo $GEM_HOME`[0...-1], `echo $PATH`[0...-1], `which passenger_status`[0...-1], `which passenger_memory_stats`[0...-1],PASSENGER_PLUGIN_CONFIG)
       end
     end
 
-    def add_plugin_config(plugin_target_name, graph_category, config_template, options = {})
+    def add_plugin_config(plugin_target_name, graph_category, ruby_path, config_template, options = {})
+      FileUtils.mkdir_p(munin_plugin_config_path)      
+      template = ERB.new config_template
+      File.open(File.join(munin_plugin_config_path, plugin_target_name), "w+") do |file|
+        file << template.result(binding)      
+      end
+    end
+
+    def add_passenger_plugin_config(plugin_target_name, graph_category, ruby_path, gem_path, gem_home, path, passenger_status_path, passenger_memory_stats_path, config_template, options = {})
       FileUtils.mkdir_p(munin_plugin_config_path)      
       template = ERB.new config_template
       File.open(File.join(munin_plugin_config_path, plugin_target_name), "w+") do |file|
