@@ -48,7 +48,7 @@ DATA
       ruby_path = `which ruby`[0...-1]
       PASSENGER_PLUGINS.each do |plugin|
         add_plugin(plugin, plugin)
-        add_passenger_plugin_config(plugin, PASSENGER_CATEGORY, ruby_path, `echo $GEM_PATH`[0...-1], `echo $GEM_HOME`[0...-1], `echo $PATH`[0...-1], `which passenger_status`[0...-1], `which passenger_memory_stats`[0...-1],PASSENGER_PLUGIN_CONFIG)
+        add_passenger_plugin_config(plugin, PASSENGER_CATEGORY, ruby_path, `echo $GEM_PATH`[0...-1], `echo $GEM_HOME`[0...-1], `echo $PATH`[0...-1], `which passenger-status`[0...-1], `which passenger-memory-stats`[0...-1],PASSENGER_PLUGIN_CONFIG)
       end
     end
 
