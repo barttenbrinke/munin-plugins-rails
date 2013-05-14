@@ -29,10 +29,6 @@ module Munin
       end        
     end
 
-    def require_passenger_gem
-      require_gem("passenger", ">=2.0")
-    end
-    
     def run_command(command, debug = false)
       result = `#{command}`
 
