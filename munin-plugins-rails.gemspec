@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "munin-plugins-rails"
-  s.version = "0.2.12"
+  s.version = "0.2.13"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Eberbach", "Bart ten Brinke"]
-  s.date = "2013-02-10"
+  s.date = "2013-05-14"
   s.email = "andrew@ebertech.ca"
   s.executables = ["request-log-analyzer-munin"]
   s.extra_rdoc_files = [
