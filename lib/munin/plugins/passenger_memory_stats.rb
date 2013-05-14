@@ -3,7 +3,6 @@
 module Munin
   class PassengerMemoryStats < RequestLogAnalyzerPlugin    
     def ensure_configuration
-      require_passenger_gem
       require_passenger_memory_stats
       
       super
