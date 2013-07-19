@@ -31,6 +31,30 @@ CONFIG
     def run
       status = run_command(passenger_status, debug)
 
+      if status =~ /Version : 4/
+        run_version4(status)
+      else
+        run_version3(status)
+      end
+    end
+
+    private
+    def run_version4(status)
+      status =~ /Max pool size\s+:\s+(\d+)/
+      puts "max.value #{$1}"
+
+      status =~ /Processes\s+:\s+(\d+)/
+      puts "running.value #{$1}"
+
+      active_processes = status.scan(/Sessions:\s+(\d+)/).flatten.select { |count| count.to_i != 0 }.size
+      puts "active.value #{active_processes}"
+
+      total_sessions = 0
+      status.scan(/Sessions: (\d+)/).flatten.each { |count| total_sessions += count.to_i }
+      puts "sessions.value #{total_sessions}"
+    end
+
+    def run_version3(status)
       status =~ /max\s+=\s+(\d+)/
       puts "max.value #{$1}"
 
