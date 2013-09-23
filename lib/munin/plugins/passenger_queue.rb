@@ -21,9 +21,14 @@ CONFIG
     end
 
     def run
-      status = run_command(passenger_status, debug)      
-      status =~ /Waiting on global queue:\s+(\d+)/
-      puts "requests.value #{$1}"
+      status = run_command(passenger_status, debug)
+      if status =~ /Version : 4/
+        status =~ /Requests in top-level queue\s+:\s+(\d+)/
+        puts "requests.value #{$1}"
+      else
+        status =~ /Waiting on global queue:\s+(\d+)/
+        puts "requests.value #{$1}"
+      end
     end
   end
 end
