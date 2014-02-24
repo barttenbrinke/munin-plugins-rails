@@ -61,7 +61,7 @@ DATA
     end
 
     def add_plugin(plugin_file, plugin_target_name = nil)
-      FileUtils.mkdir_p(munin_plugins_path)      
+      FileUtils.mkdir_p(munin_plugins_path)
       plugin_target_name ||= plugin_file
       `ln -nsf "#{File.join(munin_dir, plugin_file)}" "#{munin_plugins_path}/#{plugin_target_name}"`      
     end
