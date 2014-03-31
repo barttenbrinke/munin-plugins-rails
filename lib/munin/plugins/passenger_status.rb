@@ -10,7 +10,11 @@ module Munin
     def config
       status = `#{passenger_status}`
 
-      status =~ /max\s+=\s+(\d+)/
+      if status =~ /Version : 4/
+        status =~ /Max pool size\s+:\s+(\d+)/
+      else
+        status =~ /max\s+=\s+(\d+)/
+      end
       upper_limit = $1 || 150
 
       puts <<-CONFIG
