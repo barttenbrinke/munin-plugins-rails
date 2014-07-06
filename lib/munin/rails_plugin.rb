@@ -18,7 +18,7 @@ module Munin
       super
       
       self.interval        = environment['interval'] ? environment['interval'].to_i : 300
-      self.number_of_lines = environment['lines'] || 50000
+      self.number_of_lines = environment['lines'] || 100000
       self.log_file        = environment['log_file'] || args[0]
       self.log_format      = environment['log_format'] ? "--format #{environment['log_format']}" : ''
       self.after_time      = (Time.now - interval).strftime('%Y%m%d%H%M%S')
