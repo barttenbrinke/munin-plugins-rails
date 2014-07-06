@@ -36,7 +36,7 @@ DATA
     def install_application(args)
       app_name = args.shift
       log_file = args.shift
-      ruby_path = "/usr/bin/env GEM_PATH=#{`echo $GEM_PATH`[0...-1]} GEM_HOME=#{`echo $GEM_HOME`[0...-1]} PATH=#{`echo $PATH`[0...-1]} ruby"
+
       RAILS_PLUGINS.each do |plugin|
         plugin_target_name = [app_name, plugin].join("_")
         add_plugin(plugin, plugin_target_name)
@@ -45,7 +45,6 @@ DATA
     end
 
     def install_passenger_plugins
-      ruby_path = "/usr/bin/env GEM_PATH=#{`echo $GEM_PATH`[0...-1]} GEM_HOME=#{`echo $GEM_HOME`[0...-1]} PATH=#{`echo $PATH`[0...-1]} ruby"
       PASSENGER_PLUGINS.each do |plugin|
         add_plugin(plugin, plugin)
         add_plugin_config(plugin, PASSENGER_CATEGORY, ruby_path, PASSENGER_PLUGIN_CONFIG)
@@ -76,6 +75,10 @@ DATA
 
     def munin_dir
       File.join(File.dirname(__FILE__), "..", "..", "munin")
+    end
+
+    def ruby_path
+      "/usr/bin/env GEM_PATH=#{ENV['GEM_PATH']} GEM_HOME=#{ENV['GEM_HOME']} PATH=#{ENV['PATH']} ruby"
     end
   end
 end
