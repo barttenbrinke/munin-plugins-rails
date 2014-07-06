@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'erb'
 module Munin
-  class Command     
+  class Command
     def run(args)
       if args.first == "install"
         install_passenger_plugins
@@ -23,7 +23,7 @@ env.graph_category <%= graph_category %>
 DATA
 
     RAILS_PLUGIN_CONFIG = <<-DATA
-[<%= plugin_target_name %>]    
+[<%= plugin_target_name %>]
 env.log_file <%= options[:log_file] %>
 user root
 command <%= ruby_path %> %c
@@ -41,7 +41,7 @@ DATA
         plugin_target_name = [app_name, plugin].join("_")
         add_plugin(plugin, plugin_target_name)
         add_plugin_config(plugin_target_name, app_name, ruby_path, RAILS_PLUGIN_CONFIG, :log_file => log_file)
-      end      
+      end
     end
 
     def install_passenger_plugins
@@ -53,26 +53,26 @@ DATA
     end
 
     def add_plugin_config(plugin_target_name, graph_category, ruby_path, config_template, options = {})
-      FileUtils.mkdir_p(munin_plugin_config_path)      
+      FileUtils.mkdir_p(munin_plugin_config_path)
       template = ERB.new config_template
       File.open(File.join(munin_plugin_config_path, plugin_target_name), "w+") do |file|
-        file << template.result(binding)      
+        file << template.result(binding)
       end
     end
 
     def add_plugin(plugin_file, plugin_target_name = nil)
       FileUtils.mkdir_p(munin_plugins_path)
       plugin_target_name ||= plugin_file
-      `ln -nsf "#{File.join(munin_dir, plugin_file)}" "#{munin_plugins_path}/#{plugin_target_name}"`      
+      `ln -nsf "#{File.join(munin_dir, plugin_file)}" "#{munin_plugins_path}/#{plugin_target_name}"`
     end
 
     def munin_plugins_path
       "/etc/munin/plugins"
     end
-    
+
     def munin_plugin_config_path
       "/etc/munin/plugin-conf.d"
-    end    
+    end
 
     def munin_dir
       File.join(File.dirname(__FILE__), "..", "..", "munin")
