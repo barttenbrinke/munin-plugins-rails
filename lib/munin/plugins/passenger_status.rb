@@ -9,13 +9,9 @@ module Munin
 
     def config
       status = `#{passenger_status}`
+      values = parse(status)
 
-      if status =~ /Version : 4/
-        status =~ /Max pool size\s+:\s+(\d+)/
-      else
-        status =~ /max\s+=\s+(\d+)/
-      end
-      upper_limit = $1 || 150
+      upper_limit = values[:max] || 150
 
       puts <<-CONFIG
 graph_category #{graph_category}
@@ -34,43 +30,38 @@ CONFIG
 
     def run
       status = run_command(passenger_status, debug)
+      values = parse(status)
 
-      if status =~ /Version : 4/
-        run_version4(status)
-      else
-        run_version3(status)
-      end
+      puts "max.value %s" % values[:max]
+      puts "running.value %s" % values[:running]
+      puts "active.value %s" % values[:active]
+      puts "sessions.value %s" % values[:sessions]
     end
 
     private
-    def run_version4(status)
-      status =~ /Max pool size\s+:\s+(\d+)/
-      puts "max.value #{$1}"
 
-      status =~ /Processes\s+:\s+(\d+)/
-      puts "running.value #{$1}"
+    def parse(status)
+      values = {}
 
-      active_processes = status.scan(/Sessions:\s+(\d+)/).flatten.select { |count| count.to_i != 0 }.size
-      puts "active.value #{active_processes}"
+      if status =~ /Version : 4/
+        values[:max] = status =~ /Max pool size\s+:\s+(\d+)/ && $1
+        values[:running] = status =~ /Processes\s+:\s+(\d+)/ && $1
 
-      total_sessions = 0
-      status.scan(/Sessions: (\d+)/).flatten.each { |count| total_sessions += count.to_i }
-      puts "sessions.value #{total_sessions}"
+        sessions = status.scan(/Sessions: (\d+)/).flatten.map(&:to_i).select { |num| num > 0 }
+
+        values[:sessions] = sessions.inject(&:+)
+        values[:active] = sessions.size
+
+      else
+        values[:max] = status =~ /max\s+=\s+(\d+)/ && $1
+        values[:running] = status =~ /count\s+=\s+(\d+)/ && $1
+        values[:active] = status =~ /active\s+=\s+(\d+)/ && $1
+
+        values[:sessions] = status.scan(/Sessions: (\d+)/).flatten.inject(0) { |total, count| total += count.to_i }
+      end
+
+      values
     end
 
-    def run_version3(status)
-      status =~ /max\s+=\s+(\d+)/
-      puts "max.value #{$1}"
-
-      status =~ /count\s+=\s+(\d+)/
-      puts "running.value #{$1}"
-
-      status =~ /active\s+=\s+(\d+)/
-      puts "active.value #{$1}"
-
-      total_sessions = 0
-      status.scan(/Sessions: (\d+)/).flatten.each { |count| total_sessions += count.to_i }
-      puts "sessions.value #{total_sessions}"
-    end
   end
 end
