@@ -31,7 +31,7 @@ CONFIG
     def run
       status = run_command(passenger_status, debug)
 
-      if status =~ /Version : 4/
+      if status =~ /Version : [45]/
         run_version4(status)
       else
         run_version3(status)
