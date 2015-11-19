@@ -4,7 +4,7 @@ module Munin
   class PassengerQueue < RequestLogAnalyzerPlugin
     def ensure_configuration
       require_passenger_status
-      super      
+      super
     end
 
     def config
@@ -22,7 +22,7 @@ CONFIG
 
     def run
       status = run_command(passenger_status, debug)
-      if status =~ /Version : 4/
+      if status =~ /Version : [45]/
         status =~ /Requests in top-level queue\s+:\s+(\d+)/
         puts "requests.value #{$1}"
       else

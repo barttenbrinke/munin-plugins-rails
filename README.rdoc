@@ -6,6 +6,19 @@ This project contains munin plugins that not only work in munin, but are also co
 Most things in this repository rely heavily on the request-log-analyzer gem.
 The project has recenly been converted into a gem. If you are looking for the loose scripts, please checkout: https://github.com/barttenbrinke/munin-plugins-rails/tree/master/munin.
 
+== About this fork ({sce/munin-plugins-rails}[https://github.com/sce/munin-plugins-rails])
+
+Upstream is {barttenbrinnke/munin-plugins-rails}[https://github.com/barttenbrinke/munin-plugins-rails]. This fork has the following branches as of writing:
+
+* {rvm_support}[https://github.com/sce/munin-plugins-rails/tree/rvm_support] - The patches from {huangxiangdan's fork}[https://github.com/huangxiangdan/munin-plugins-rails] that enable rvm support.
+* {refactor_passenger_status}[https://github.com/sce/munin-plugins-rails/tree/refactor_passenger_status] - The patch from whatcould that fixes Passenger 4 support plus patch from sce to clean up plugin.
+* {passenger4_rvm}[https://github.com/sce/munin-plugins-rails/tree/passenger4_rvm] - The two above branches merged.
+* master - The passenger4_rvm branch plus this section added to the README.rdoc.
+
+The master branch will be rebased at my discretion, so do not use or rely on it. (It should only contain patches relevant only for this particular repository anyway.)
+
+This section is the only addition to this README from upstream. The rest of this file is unmodified.
+
 == What's in the box?
 * passenger_memory_stats - Munin plugin to monitor the memory usage of passenger application servers.
 * pasenger_queue - Montoring of passenger queue lenth.
