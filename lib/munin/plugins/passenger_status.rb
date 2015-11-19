@@ -49,7 +49,7 @@ CONFIG
 
         sessions = status.scan(/Sessions: (\d+)/).flatten.map(&:to_i).select { |num| num > 0 }
 
-        values[:sessions] = sessions.inject(&:+)
+        values[:sessions] = sessions.inject(&:+) || 0
         values[:active] = sessions.size
 
       else
