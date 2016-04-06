@@ -20,11 +20,11 @@ else
   puts "  request-log-analyzer-munin install"
   puts
   puts "To install railsplugins:"
-  puts "  request-log-analyzer-munin <app-name> <log-file>"
+  puts "  request-log-analyzer-munin add <app-name> <log-file>"
   puts
   puts "Examples:"
   puts "  request-log-analyzer-munin install"
-  puts "  request-log-analyzer-munin MyAwesomeApp /srv/my_app/current/log/production.log"
+  puts "  request-log-analyzer-munin add MyAwesomeApp /srv/my_app/current/log/production.log"
   puts
   exit(0)
 end
